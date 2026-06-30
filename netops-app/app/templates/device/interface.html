@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="detail-page">
+  <div class="detail-top">
+    <a href="{{ back_url }}">← Back to Device</a>
+    <h1>{{ title }}</h1>
+  </div>
+
+  {% if port %}
+    <div class="fact-grid">
+      {% for label, value in facts %}
+        <div class="fact-card">
+          <div class="fact-label">{{ label }}</div>
+          <div class="fact-value">{{ value|safe }}</div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-card">Interface not found.</div>
+  {% endif %}
+</section>
+{% endblock %}

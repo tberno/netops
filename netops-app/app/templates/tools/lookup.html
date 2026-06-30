@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% from "components/table.html" import table %}
+
+{% block content %}
+<section class="lookup-page">
+  <header class="lookup-head">
+    <h1>{{ title }}</h1>
+    <div class="meta">{{ subtitle }}</div>
+  </header>
+
+  <form class="lookup-form" method="get">
+    <input name="q" value="{{ q or '' }}" placeholder="IP, MAC, hostname, interface, VLAN">
+    <label class="limit-control">
+      <span>Limit</span>
+      <select name="limit">
+        {% for opt in limit_options %}
+          <option value="{{ opt }}" {% if opt == limit %}selected{% endif %}>{{ opt }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <button type="submit">Lookup</button>
+    <a class="reset-link" href="{{ reset_url }}">Reset</a>
+  </form>
+
+  {% if not q %}
+    <div class="empty-card">
+      Enter a device, IP, MAC, interface, VLAN, or text fragment.
+    </div>
+  {% elif sections %}
+    {% for section in sections %}
+      <section class="lookup-section">
+        <h2>{{ section.title }} <span>{{ section.rows|length }}</span></h2>
+        {{ table(section.columns, section.rows) }}
+      </section>
+    {% endfor %}
+  {% else %}
+    <div class="empty-card">
+      No results found for <strong>{{ q }}</strong>.
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

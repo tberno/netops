@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <title>{{ title or "NetOps v4" }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ request.state.app_prefix }}/static/netops.css?v=componentlookups1">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="{{ request.state.app_prefix }}/reports/interface-statistics">NetOps</a>
+
+    <nav class="main-nav" aria-label="Main navigation">
+      <div class="nav-item">
+        <a class="nav-link" href="{{ request.state.app_prefix }}/reports/interface-statistics">Dashboards</a>
+        <div class="nav-menu">
+          <a href="{{ request.state.app_prefix }}/reports/interface-statistics">All Dashboards</a>
+          <span class="nav-disabled">Device</span>
+          <span class="nav-disabled">Events</span>
+          <span class="nav-disabled">Interface</span>
+          <span class="nav-disabled">Status</span>
+        </div>
+      </div>
+
+      <div class="nav-item">
+        <a class="nav-link" href="{{ request.state.app_prefix }}/reports/interface-statistics">Reports</a>
+        <div class="nav-menu">
+          <a href="{{ request.state.app_prefix }}/reports/interface-statistics">Interface Statistics</a>
+          <a href="{{ request.state.app_prefix }}/reports/interface-configuration">Interface Configuration</a>
+          <a href="{{ request.state.app_prefix }}/reports/mac-table">MAC Table</a>
+          <a href="{{ request.state.app_prefix }}/reports/arp-ip">ARP / IP</a>
+          <a href="{{ request.state.app_prefix }}/reports/vlans">VLANs</a>
+          <a href="{{ request.state.app_prefix }}/reports/unused-interfaces">Unused Interfaces</a>
+          <a href="{{ request.state.app_prefix }}/reports/events">Events</a>
+        </div>
+      </div>
+
+      <div class="nav-item">
+        <a class="nav-link" href="{{ request.state.app_prefix }}/tools/lookup">Tools</a>
+        <div class="nav-menu">
+          <a href="{{ request.state.app_prefix }}/tools/lookup">Lookup Hub</a>
+          <a href="{{ request.state.app_prefix }}/tools/lookup/devices">Device Lookup</a>
+          <a href="{{ request.state.app_prefix }}/tools/lookup/interfaces">Interface Lookup</a>
+          <a href="{{ request.state.app_prefix }}/tools/lookup/ips">IP Lookup</a>
+          <a href="{{ request.state.app_prefix }}/tools/lookup/macs">MAC / FDB Lookup</a>
+          <a href="{{ request.state.app_prefix }}/tools/lookup/vlans">VLAN Lookup</a>
+          <a href="{{ request.state.app_prefix }}/tools/lookup/events">Event Lookup</a>
+          <span class="nav-disabled">SolidServer DDI</span>
+          <span class="nav-disabled">DNS Tools</span>
+          <span class="nav-disabled">LLDP Lookup</span>
+        </div>
+      </div>
+
+      <div class="nav-item">
+        <a class="nav-link" href="#">Admin</a>
+        <div class="nav-menu">
+          <span class="nav-disabled">Manage</span>
+          <a href="{{ request.state.app_prefix }}/health">Status</a>
+          <span class="nav-disabled">DDI Audit</span>
+          <span class="nav-disabled">Down Devices</span>
+        </div>
+      </div>
+
+      <div class="nav-item">
+        <a class="nav-link" href="#">New</a>
+        <div class="nav-menu">
+          <span class="nav-disabled">Device</span>
+          <span class="nav-disabled">Report</span>
+          <span class="nav-disabled">Tool</span>
+        </div>
+      </div>
+
+      <div class="nav-item">
+        <a class="nav-link" href="#">PDF</a>
+        <div class="nav-menu nav-menu-right">
+          <span class="nav-disabled">Save Current Page</span>
+          <span class="nav-disabled">Print Current Page</span>
+        </div>
+      </div>
+    </nav>
+
+    <form class="global-search" method="get" action="{{ request.state.app_prefix }}/tools/lookup/devices">
+      <input name="q" placeholder="Lookup device, IP, MAC, VLAN, interface">
+      <button type="submit">Lookup</button>
+      <button type="button">Light</button>
+    </form>
+  </header>
+
+  <main class="page">
+    {% block content %}{% endblock %}
+  </main>
+
+  <script src="{{ request.state.app_prefix }}/static/netops.js?v=componentlookups1"></script>
+</body>
+</html>

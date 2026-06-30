@@ -1,0 +1,33 @@
+{% macro switch_picker(selected_devices, available_devices) %}
+<aside class="switch-picker">
+  <div class="switch-head">
+    <strong>Switches</strong>
+    <small>{{ selected_devices|length }} selected</small>
+  </div>
+
+  <input class="switch-filter" placeholder="filter switches" data-switch-filter autocomplete="off">
+
+  <div class="switch-actions">
+    <button type="button" onclick="clearSwitchFilter()">clear filter</button>
+    {% if selected_devices %}
+      <a href="{{ clear_selected_url }}">clear selected</a>
+    {% endif %}
+  </div>
+
+  {% if selected_devices %}
+    <div class="switch-section">SELECTED</div>
+    <div class="switch-list selected-list">
+      {% for d in selected_devices %}
+        <a class="switch-item selected" href="{{ d.href }}" title="Remove {{ d.name }}">{{ d.name }}</a>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <div class="switch-section">AVAILABLE</div>
+  <div class="switch-list available-list" data-switch-list>
+    {% for d in available_devices %}
+      <a class="switch-item" href="{{ d.href }}" title="Add {{ d.name }}">{{ d.name }}</a>
+    {% endfor %}
+  </div>
+</aside>
+{% endmacro %}

@@ -1,0 +1,24 @@
+services:
+  netops-v4:
+    build:
+      context: ./netops-app
+      dockerfile: Dockerfile
+    image: middlebury-netops-v4:latest
+    container_name: netops-v4
+    restart: unless-stopped
+    network_mode: host
+    env_file:
+      - ../netops-v3/.env
+    environment:
+      APP_PORT: "8056"
+      APP_ROOT_PATH: /netops-v4
+      ROOT_PATH: /netops-v4
+      PORTAL_NAME: NetOps v4
+      LIBRENMS_DB_HOST: 127.0.0.1
+      LIBRENMS_DB_PORT: "3306"
+      LIBRENMS_DB_NAME: librenms
+      LIBRENMS_DB_USER: librenms
+      LIBRENMS_BASE_URL: https://raccoon.middlebury.edu
+    volumes:
+      - /opt/librenms/rrd:/opt/librenms/rrd:ro
+      - ./data:/data:ro

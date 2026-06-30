@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="lookup-page">
+  <header class="lookup-head">
+    <h1>{{ title }}</h1>
+    <div class="meta">{{ subtitle }}</div>
+  </header>
+
+  <div class="lookup-card-grid">
+    {% for c in components %}
+      <a class="lookup-card" href="{{ c.href }}">
+        <strong>{{ c.title }}</strong>
+        <span>{{ c.placeholder }}</span>
+      </a>
+    {% endfor %}
+  </div>
+
+  <div class="empty-card">
+    Build and test these one at a time. Once each component works, Universal Lookup can call them safely.
+  </div>
+</section>
+{% endblock %}

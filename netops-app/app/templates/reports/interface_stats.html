@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% from "components/table.html" import table %}
+{% from "components/switch_picker.html" import switch_picker with context %}
+
+{% block content %}
+<div class="report-layout">
+  {{ switch_picker(selected_devices, available_devices) }}
+
+  <section class="report-main">
+    <header class="report-head">
+      <h1>{{ title }}</h1>
+      <div class="meta">{{ subtitle }}</div>
+    </header>
+
+    <form class="report-search report-controls" method="get">
+      {% if selected_ids_csv %}
+        <input type="hidden" name="device_ids" value="{{ selected_ids_csv }}">
+      {% endif %}
+
+      <input name="q" value="{{ q or '' }}" placeholder="Filter selected switches, interface, title">
+
+      <label class="limit-control">
+        <span>Limit</span>
+        <select name="limit">
+          {% for opt in limit_options %}
+            <option value="{{ opt }}" {% if opt == limit %}selected{% endif %}>{{ opt }}</option>
+          {% endfor %}
+        </select>
+      </label>
+
+      <button type="submit">Search</button>
+      <a href="{{ clear_url }}">Clear Search</a>
+      <a class="reset-link" href="{{ reset_url }}">Reset Report</a>
+      <a class="export-link" href="{{ export_url }}">CSV</a>
+    </form>
+
+    {{ table(columns, rows) }}
+  </section>
+</div>
+{% endblock %}

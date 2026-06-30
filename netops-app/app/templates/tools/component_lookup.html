@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% from "components/table.html" import table %}
+
+{% block content %}
+<section class="lookup-page">
+  <header class="lookup-head">
+    <h1>{{ title }}</h1>
+    <div class="meta">{{ subtitle }}</div>
+  </header>
+
+  <div class="lookup-tabs">
+    {% for c in components %}
+      <a class="{% if c.active %}active{% endif %}" href="{{ c.href }}">{{ c.short }}</a>
+    {% endfor %}
+  </div>
+
+  <form class="lookup-form" method="get">
+    <input name="q" value="{{ q or '' }}" placeholder="{{ placeholder }}">
+    <label class="limit-control">
+      <span>Limit</span>
+      <select name="limit">
+        {% for opt in limit_options %}
+          <option value="{{ opt }}" {% if opt == limit %}selected{% endif %}>{{ opt }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <button type="submit">Lookup</button>
+    <a class="reset-link" href="{{ reset_url }}">Reset</a>
+  </form>
+
+  {% if not q %}
+    <div class="empty-card">
+      Enter a search value for {{ title }}.
+    </div>
+  {% elif section.rows %}
+    <section class="lookup-section {% if section.is_error %}lookup-error-section{% endif %}">
+      <h2>{{ section.title }} <span>{{ section.rows|length }}</span></h2>
+      {{ table(section.columns, section.rows) }}
+    </section>
+  {% else %}
+    <div class="empty-card">
+      No {{ title }} results found for <strong>{{ q }}</strong>.
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,31 @@
+# secrets / local env
+.env
+.env.*
+*.env
+
+# backups / checkpoints
+safe-backups/
+*.tgz
+*.tar.gz
+checkpoint-*.tgz
+
+# python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+
+# editor / OS
+.vscode/settings.json
+.DS_Store
+Thumbs.db
+
+# logs/temp
+*.log
+tmp/
+temp/
+
+# one-off migration/patch scripts from terminal build
+/*.sh
+!/scripts/*.sh
