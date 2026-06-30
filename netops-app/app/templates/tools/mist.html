@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="lookup-page">
+  <header class="lookup-head">
+    <h1>Mist Lookup</h1>
+    <div class="meta">Standalone Mist integration placeholder. API calls stay disabled until the token is added to the container environment.</div>
+  </header>
+
+  <div class="lookup-status-row">
+    <span class="status-pill {% if configured %}good{% else %}bad{% endif %}">
+      Mist env {% if configured %}configured{% else %}missing{% endif %}
+    </span>
+    <span class="status-pill {% if base_url_set %}good{% else %}bad{% endif %}">MIST_BASE_URL</span>
+    <span class="status-pill {% if org_id_set %}good{% else %}bad{% endif %}">MIST_ORG_ID</span>
+    <span class="status-pill {% if token_set %}good{% else %}bad{% endif %}">MIST_API_TOKEN</span>
+  </div>
+
+  <section class="lookup-section">
+    <h2>Planned Mist Components <span>5</span></h2>
+    <div class="lookup-card-grid">
+      <div class="lookup-card">
+        <strong>Client Lookup</strong>
+        <span>MAC, hostname, username, IP, SSID, VLAN, AP, switch port, last seen</span>
+      </div>
+      <div class="lookup-card">
+        <strong>AP Lookup</strong>
+        <span>AP name, site, model, serial, status, firmware, clients</span>
+      </div>
+      <div class="lookup-card">
+        <strong>Switch Lookup</strong>
+        <span>Mist-managed switches, ports, clients, PoE, LLDP hints</span>
+      </div>
+      <div class="lookup-card">
+        <strong>Site Health</strong>
+        <span>Sites, bad APs, bad clients, SLE indicators</span>
+      </div>
+      <div class="lookup-card">
+        <strong>Universal Correlation</strong>
+        <span>MAC/IP search across Mist, LibreNMS, SolidServer, DNS, and events</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="lookup-section">
+    <h2>Required Environment Variables <span>3</span></h2>
+    <pre class="code-block">MIST_BASE_URL=https://api.mist.com
+MIST_ORG_ID=your-org-id
+MIST_API_TOKEN=your-token</pre>
+    <div class="empty-card">
+      Put these in the local raccoon env file only. Do not commit them to Git.
+    </div>
+  </section>
+</section>
+{% endblock %}

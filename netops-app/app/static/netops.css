@@ -1332,3 +1332,26 @@ button,
   max-height: 360px;
   overflow: auto;
 }
+
+/* v4 placeholders */
+.placeholder-list {
+  display: grid;
+  gap: 7px;
+}
+
+.placeholder-step {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 8px 10px;
+  color: var(--text);
+}
+
+.code-block {
+  white-space: pre-wrap;
+  background: #06171d;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px;
+  color: var(--text);
+}

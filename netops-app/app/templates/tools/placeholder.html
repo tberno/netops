@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="lookup-page">
+  <header class="lookup-head">
+    <h1>{{ title }}</h1>
+    <div class="meta">{{ subtitle }}</div>
+  </header>
+
+  <div class="empty-card">
+    {{ message }}
+  </div>
+
+  {% if next_steps %}
+    <section class="lookup-section">
+      <h2>Next Steps <span>{{ next_steps|length }}</span></h2>
+      <div class="placeholder-list">
+        {% for step in next_steps %}
+          <div class="placeholder-step">{{ step }}</div>
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+</section>
+{% endblock %}

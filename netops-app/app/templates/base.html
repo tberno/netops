@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <title>{{ title or "NetOps v4" }}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="{{ request.state.app_prefix }}/static/netops.css?v=solidservertool1">
+  <link rel="stylesheet" href="{{ request.state.app_prefix }}/static/netops.css?v=deadlinks1">
 </head>
 <body>
   <header class="topbar">
@@ -39,6 +39,7 @@
         <a class="nav-link" href="{{ request.state.app_prefix }}/tools/lookup">Tools</a>
         <div class="nav-menu">
           <a href="{{ request.state.app_prefix }}/tools/lookup">Lookup Hub</a>
+          <a href="{{ request.state.app_prefix }}/tools/universal">Universal Lookup</a>
           <a href="{{ request.state.app_prefix }}/tools/lookup/devices">Device Lookup</a>
           <a href="{{ request.state.app_prefix }}/tools/lookup/interfaces">Interface Lookup</a>
           <a href="{{ request.state.app_prefix }}/tools/lookup/ips">IP Lookup</a>
@@ -46,13 +47,14 @@
           <a href="{{ request.state.app_prefix }}/tools/lookup/vlans">VLAN Lookup</a>
           <a href="{{ request.state.app_prefix }}/tools/lookup/events">Event Lookup</a>
           <a href="{{ request.state.app_prefix }}/tools/solidserver">SolidServer DDI</a>
-          <span class="nav-disabled">DNS Tools</span>
-          <span class="nav-disabled">LLDP Lookup</span>
+          <a href="{{ request.state.app_prefix }}/tools/mist">Mist Lookup</a>
+          <a href="{{ request.state.app_prefix }}/tools/dns">DNS Tools</a>
+          <a href="{{ request.state.app_prefix }}/tools/lldp">LLDP Lookup</a>
         </div>
       </div>
 
       <div class="nav-item">
-        <a class="nav-link" href="#">Admin</a>
+        <a class="nav-link" href="{{ request.state.app_prefix }}/tools/lookup">Admin</a>
         <div class="nav-menu">
           <span class="nav-disabled">Manage</span>
           <a href="{{ request.state.app_prefix }}/health">Status</a>
@@ -62,7 +64,7 @@
       </div>
 
       <div class="nav-item">
-        <a class="nav-link" href="#">New</a>
+        <a class="nav-link" href="{{ request.state.app_prefix }}/tools/lookup">New</a>
         <div class="nav-menu">
           <span class="nav-disabled">Device</span>
           <span class="nav-disabled">Report</span>
@@ -71,7 +73,7 @@
       </div>
 
       <div class="nav-item">
-        <a class="nav-link" href="#">PDF</a>
+        <a class="nav-link" href="{{ request.state.app_prefix }}/tools/lookup">PDF</a>
         <div class="nav-menu nav-menu-right">
           <span class="nav-disabled">Save Current Page</span>
           <span class="nav-disabled">Print Current Page</span>
@@ -90,6 +92,6 @@
     {% block content %}{% endblock %}
   </main>
 
-  <script src="{{ request.state.app_prefix }}/static/netops.js?v=solidservertool1"></script>
+  <script src="{{ request.state.app_prefix }}/static/netops.js?v=deadlinks1"></script>
 </body>
 </html>
