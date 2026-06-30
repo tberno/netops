@@ -5,6 +5,8 @@ from fastapi import APIRouter, Request
 from app.core.config import APP_PREFIX
 from app.services.component_lookup import component_lookup_context, lookup_hub_context
 from app.services.solidserver_tool import solidserver_context
+from app.services.mist_tool import mist_context, mist_site_detail_context, mist_switch_detail_context, mist_site_detail_context, mist_switch_detail_context
+from app.services.universal_tool import universal_context
 
 
 router = APIRouter()
@@ -30,19 +32,68 @@ async def solidserver_lookup(request: Request, q: str = "", limit: int = 50, deb
 
 
 @router.get("/tools/mist")
-async def mist_lookup(request: Request):
-    context = {
-        "request": request,
-        "base_url_set": bool(os.environ.get("MIST_BASE_URL", "").strip()),
-        "org_id_set": bool(os.environ.get("MIST_ORG_ID", "").strip()),
-        "token_set": bool(os.environ.get("MIST_API_TOKEN", "").strip()),
-    }
-    context["configured"] = context["base_url_set"] and context["org_id_set"] and context["token_set"]
+async def mist_lookup(request: Request, q: str = "", limit: int = 50):
+    context = mist_context(q=q, limit=limit)
+    context["request"] = request
     return request.app.state.templates.TemplateResponse(
         request=request,
         name="tools/mist.html",
         context=context,
     )
+
+
+@router.get("/tools/mist/site")
+async def mist_site_detail(request: Request, site_id: str, limit: int = 100):
+    try:
+        context = mist_site_detail_context(site_id=site_id, limit=limit)
+        context["request"] = request
+        return request.app.state.templates.TemplateResponse(
+            request=request,
+            name="tools/mist_site.html",
+            context=context,
+        )
+    except Exception as exc:
+        return request.app.state.templates.TemplateResponse(
+            request=request,
+            name="tools/placeholder.html",
+            context={
+                "request": request,
+                "title": "Mist Site Drilldown Error",
+                "subtitle": site_id,
+                "message": str(exc),
+                "next_steps": [
+                    "Go back to Mist Overview and retry the site link.",
+                    "Check container logs if this persists.",
+                ],
+            },
+        )
+
+
+@router.get("/tools/mist/switch")
+async def mist_switch_detail(request: Request, site_id: str, mac: str):
+    try:
+        context = mist_switch_detail_context(site_id=site_id, mac=mac)
+        context["request"] = request
+        return request.app.state.templates.TemplateResponse(
+            request=request,
+            name="tools/mist_switch.html",
+            context=context,
+        )
+    except Exception as exc:
+        return request.app.state.templates.TemplateResponse(
+            request=request,
+            name="tools/placeholder.html",
+            context={
+                "request": request,
+                "title": "Mist Switch Drilldown Error",
+                "subtitle": f"site_id={site_id} mac={mac}",
+                "message": str(exc),
+                "next_steps": [
+                    "Go back to Mist Overview and retry the switch link.",
+                    "Confirm the switch is still present in Mist inventory.",
+                ],
+            },
+        )
 
 
 @router.get("/tools/dns")
@@ -85,22 +136,13 @@ async def lldp_lookup_placeholder(request: Request):
 
 
 @router.get("/tools/universal")
-async def universal_lookup_placeholder(request: Request):
+async def universal_lookup(request: Request, q: str = "", limit: int = 50):
+    context = universal_context(q=q, limit=limit)
+    context["request"] = request
     return request.app.state.templates.TemplateResponse(
         request=request,
-        name="tools/placeholder.html",
-        context={
-            "request": request,
-            "title": "Universal Lookup",
-            "subtitle": "Placeholder for final combined lookup.",
-            "message": "Universal Lookup will be built after all standalone components are stable.",
-            "next_steps": [
-                "Keep LibreNMS component lookups working.",
-                "Keep SolidServer standalone lookup working.",
-                "Add Mist standalone lookup after the API token is available.",
-                "Then combine LibreNMS, SolidServer, Mist, DNS, LLDP, and events into one safe wrapper.",
-            ],
-        },
+        name="tools/universal.html",
+        context=context,
     )
 
 
@@ -128,4 +170,141 @@ async def component_lookup(request: Request, component: str, q: str = "", limit:
         request=request,
         name="tools/component_lookup.html",
         context=context,
+    )
+
+
+# --- Top nav placeholder/landing routes v2 ---
+
+@router.get("/dashboards")
+async def dashboards_home(request: Request):
+    return request.app.state.templates.TemplateResponse(
+        request=request,
+        name="tools/placeholder.html",
+        context={
+            "request": request,
+            "title": "Dashboards",
+            "subtitle": "NetOps v4 dashboard landing page",
+            "message": "Dashboard landing page placeholder. Working operational views are currently under Reports and Tools.",
+            "next_steps": ["Use Reports for LibreNMS tables.", "Use Tools for Lookup Hub, Universal Lookup, Mist, SolidServer, and DNS tools."],
+        },
+    )
+
+
+@router.get("/dashboards/{page}")
+async def dashboards_placeholder(request: Request, page: str):
+    return request.app.state.templates.TemplateResponse(
+        request=request,
+        name="tools/placeholder.html",
+        context={
+            "request": request,
+            "title": f"Dashboard: {page}",
+            "subtitle": "Dashboard placeholder",
+            "message": "This dashboard route is reserved for a future v4 dashboard.",
+            "next_steps": ["No dead link here now.", "Use Reports and Tools for current working pages."],
+        },
+    )
+
+
+@router.get("/admin")
+async def admin_home(request: Request):
+    return request.app.state.templates.TemplateResponse(
+        request=request,
+        name="tools/placeholder.html",
+        context={
+            "request": request,
+            "title": "Admin",
+            "subtitle": "Admin landing page",
+            "message": "Admin placeholder.",
+            "next_steps": ["Use /health for raw app health.", "Routes page can be wired later."],
+        },
+    )
+
+
+@router.get("/admin/{page}")
+async def admin_placeholder(request: Request, page: str):
+    return request.app.state.templates.TemplateResponse(
+        request=request,
+        name="tools/placeholder.html",
+        context={
+            "request": request,
+            "title": f"Admin: {page}",
+            "subtitle": "Admin placeholder",
+            "message": "Admin route placeholder.",
+            "next_steps": ["No dead link here now."],
+        },
+    )
+
+
+@router.get("/new")
+async def new_home(request: Request):
+    return request.app.state.templates.TemplateResponse(
+        request=request,
+        name="tools/placeholder.html",
+        context={
+            "request": request,
+            "title": "New",
+            "subtitle": "New item landing page",
+            "message": "Placeholder for future new report/tool workflows.",
+            "next_steps": ["Current feature work is still done in code/Git."],
+        },
+    )
+
+
+@router.get("/new/{page}")
+async def new_placeholder(request: Request, page: str):
+    return request.app.state.templates.TemplateResponse(
+        request=request,
+        name="tools/placeholder.html",
+        context={
+            "request": request,
+            "title": f"New: {page}",
+            "subtitle": "New placeholder",
+            "message": "New workflow placeholder.",
+            "next_steps": ["No dead link here now."],
+        },
+    )
+
+
+@router.get("/pdf")
+async def pdf_home(request: Request):
+    return request.app.state.templates.TemplateResponse(
+        request=request,
+        name="tools/placeholder.html",
+        context={
+            "request": request,
+            "title": "PDF",
+            "subtitle": "PDF landing page",
+            "message": "PDF export placeholder.",
+            "next_steps": ["Use browser print/PDF for now."],
+        },
+    )
+
+
+@router.get("/pdf/{page}")
+async def pdf_placeholder(request: Request, page: str):
+    return request.app.state.templates.TemplateResponse(
+        request=request,
+        name="tools/placeholder.html",
+        context={
+            "request": request,
+            "title": f"PDF: {page}",
+            "subtitle": "PDF placeholder",
+            "message": "PDF route placeholder.",
+            "next_steps": ["No dead link here now."],
+        },
+    )
+
+
+@router.get("/tools/dns")
+async def dns_tools_placeholder(request: Request):
+    return request.app.state.templates.TemplateResponse(
+        request=request,
+        name="tools/placeholder.html",
+        context={
+            "request": request,
+            "title": "DNS Tools",
+            "subtitle": "DNS tools placeholder",
+            "message": "DNS tools are not fully ported to v4 yet.",
+            "next_steps": ["Use Universal Lookup or SolidServer DDI for now.", "Port v3 DNS tools next."],
+        },
     )

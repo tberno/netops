@@ -1,5 +1,8 @@
 services:
   netops-v4:
+    env_file:
+      - ../netops-v3/.env
+      - .env
     build:
       context: ./netops-app
       dockerfile: Dockerfile
@@ -7,8 +10,6 @@ services:
     container_name: netops-v4
     restart: unless-stopped
     network_mode: host
-    env_file:
-      - ../netops-v3/.env
     environment:
       APP_PORT: "8056"
       APP_ROOT_PATH: /netops-v4

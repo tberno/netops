@@ -1,42 +1,61 @@
 {% extends "base.html" %}
-{% from "components/table.html" import table %}
 
 {% block content %}
 <section class="lookup-page">
   <header class="lookup-head">
-    <h1>{{ title }}</h1>
-    <div class="meta">{{ subtitle }}</div>
+    <h1>Lookup Hub</h1>
+    <div class="meta">Test each lookup component independently before building universal lookup.</div>
   </header>
 
-  <form class="lookup-form" method="get">
-    <input name="q" value="{{ q or '' }}" placeholder="IP, MAC, hostname, interface, VLAN">
-    <label class="limit-control">
-      <span>Limit</span>
-      <select name="limit">
-        {% for opt in limit_options %}
-          <option value="{{ opt }}" {% if opt == limit %}selected{% endif %}>{{ opt }}</option>
-        {% endfor %}
-      </select>
-    </label>
-    <button type="submit">Lookup</button>
-    <a class="reset-link" href="{{ reset_url }}">Reset</a>
-  </form>
+  <div class="lookup-hub-grid">
+    <a class="lookup-hub-card" href="{{ request.state.app_prefix }}/tools/lookup/devices">
+      <strong>Device Lookup</strong>
+      <span>hostname, sysName, IP, OS, hardware</span>
+    </a>
 
-  {% if not q %}
-    <div class="empty-card">
-      Enter a device, IP, MAC, interface, VLAN, or text fragment.
-    </div>
-  {% elif sections %}
-    {% for section in sections %}
-      <section class="lookup-section">
-        <h2>{{ section.title }} <span>{{ section.rows|length }}</span></h2>
-        {{ table(section.columns, section.rows) }}
-      </section>
-    {% endfor %}
-  {% else %}
-    <div class="empty-card">
-      No results found for <strong>{{ q }}</strong>.
-    </div>
-  {% endif %}
+    <a class="lookup-hub-card" href="{{ request.state.app_prefix }}/tools/lookup/interfaces">
+      <strong>Interface Lookup</strong>
+      <span>interface, description, title, device</span>
+    </a>
+
+    <a class="lookup-hub-card" href="{{ request.state.app_prefix }}/tools/lookup/ips">
+      <strong>IP Lookup</strong>
+      <span>IP address, prefix, hostname, MAC</span>
+    </a>
+
+    <a class="lookup-hub-card" href="{{ request.state.app_prefix }}/tools/lookup/macs">
+      <strong>MAC / FDB Lookup</strong>
+      <span>MAC address, VLAN, interface, switch</span>
+    </a>
+
+    <a class="lookup-hub-card" href="{{ request.state.app_prefix }}/tools/lookup/vlans">
+      <strong>VLAN Lookup</strong>
+      <span>VLAN number, name, domain, device</span>
+    </a>
+
+    <a class="lookup-hub-card" href="{{ request.state.app_prefix }}/tools/lookup/events">
+      <strong>Event Lookup</strong>
+      <span>event text, device, type, user</span>
+    </a>
+
+    <a class="lookup-hub-card" href="{{ request.state.app_prefix }}/tools/solidserver">
+      <strong>SolidServer DDI Lookup</strong>
+      <span>IPAM, DHCP reservations, scopes, ranges, DNS records</span>
+    </a>
+
+    <a class="lookup-hub-card" href="{{ request.state.app_prefix }}/tools/mist">
+      <strong>Mist Lookup</strong>
+      <span>sites, PODs, switches, APs, clients, Mist drilldowns</span>
+    </a>
+
+    <a class="lookup-hub-card universal-card" href="{{ request.state.app_prefix }}/tools/universal">
+      <strong>Universal Lookup</strong>
+      <span>single search across LibreNMS, SolidServer, Mist, DNS, and events</span>
+    </a>
+  </div>
+
+  <div class="empty-card hub-note">
+    Build and test these one at a time. Once each component works, Universal Lookup can call them safely.
+  </div>
 </section>
 {% endblock %}
