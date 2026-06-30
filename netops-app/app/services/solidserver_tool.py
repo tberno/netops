@@ -344,18 +344,105 @@ def normalize_dhcp_range(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
 def normalize_dns_rr(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     out = []
     for row in rows:
+        view = pick(row, ["dnsview_name", "view_name", "view"])
+        zone_type = pick(row, ["dnszone_type"])
+
+        # If dnsview_name is not present, infer a useful grouping from the zone type/name.
+        if not view:
+            if "internal" in str(row).lower():
+                view = "Internal"
+            elif "external" in str(row).lower():
+                view = "External"
+            else:
+                view = ""
+
+        value = pick(row, ["rr_all_value", "rr_value", "rr_value1", "value1", "value", "data", "rdata"])
+
         out.append({
-            "name": pick(row, ["rr_full_name", "fqdn", "rr_name", "name"]),
+            "view": view,
+            "name": pick(row, ["rr_full_name", "rr_full_name_utf", "fqdn", "rr_name", "name"]),
             "type": pick(row, ["rr_type", "type"]),
-            "value": pick(row, ["rr_all_value", "rr_value", "rr_value1", "value1", "value", "data", "rdata"]),
-            "value2": pick(row, ["value1", "rr_value2", "value2"]),
+            "value": value,
             "zone": pick(row, ["dnszone_name", "dnszone_sort_zone", "zone_name", "zone"]),
-            "view": pick(row, ["dnsview_name", "view_name", "view"]),
             "dns_server": pick(row, ["dns_name"]),
+            "zone_type": zone_type,
             "ttl": pick(row, ["ttl"]),
             "updated_days": pick(row, ["rr_last_update_days"]),
             "raw": compact_raw(row),
         })
+    return smart_dedupe_dns_rr(out)
+
+
+
+
+def dns_view_bucket(value: str) -> str:
+    text = str(value or "").strip().lower()
+    if "internal" in text:
+        return "Internal"
+    if "external" in text:
+        return "External"
+    return str(value or "").strip() or "Unknown"
+
+
+def smart_dedupe_dns_rr(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    grouped: dict[tuple[str, str, str, str, str], dict[str, Any]] = {}
+
+    for row in rows:
+        view = dns_view_bucket(row.get("view", ""))
+        name = str(row.get("name") or "").strip()
+        rr_type = str(row.get("type") or "").strip()
+        value = str(row.get("value") or "").strip()
+        zone = str(row.get("zone") or "").strip()
+
+        # This removes duplicate master/slave/DNS-server rows while keeping
+        # separate records for Internal vs External views.
+        key = (
+            view.lower(),
+            zone.lower(),
+            name.lower(),
+            rr_type.upper(),
+            value,
+        )
+
+        existing = grouped.get(key)
+        dns_server = str(row.get("dns_server") or "").strip()
+        zone_type = str(row.get("zone_type") or "").strip()
+
+        if existing is None:
+            new_row = dict(row)
+            new_row["view"] = view
+            new_row["_dns_servers"] = set([dns_server] if dns_server else [])
+            new_row["_zone_types"] = set([zone_type] if zone_type else [])
+            new_row["sources"] = "1"
+            grouped[key] = new_row
+        else:
+            if dns_server:
+                existing["_dns_servers"].add(dns_server)
+            if zone_type:
+                existing["_zone_types"].add(zone_type)
+
+    out = []
+    for row in grouped.values():
+        servers = sorted(x for x in row.pop("_dns_servers", set()) if x)
+        zone_types = sorted(x for x in row.pop("_zone_types", set()) if x)
+
+        row["sources"] = str(max(1, len(servers) or len(zone_types) or 1))
+        row["dns_server"] = ", ".join(servers[:3])
+        if len(servers) > 3:
+            row["dns_server"] += f" +{len(servers) - 3} more"
+
+        row["zone_type"] = ", ".join(zone_types)
+
+        out.append(row)
+
+    out.sort(key=lambda r: (
+        0 if r.get("view") == "External" else 1 if r.get("view") == "Internal" else 2,
+        str(r.get("zone") or "").lower(),
+        str(r.get("name") or "").lower(),
+        str(r.get("type") or "").upper(),
+        str(r.get("value") or "").lower(),
+    ))
+
     return out
 
 
@@ -448,13 +535,13 @@ SECTIONS = [
         "mode": "dns_rr",
         "normalizer": normalize_dns_rr,
         "columns": [
+            {"key": "view", "label": "View"},
             {"key": "name", "label": "Name"},
             {"key": "type", "label": "Type"},
             {"key": "value", "label": "Value"},
-            {"key": "value2", "label": "Value 2"},
             {"key": "zone", "label": "Zone"},
-            {"key": "view", "label": "View"},
-            {"key": "dns_server", "label": "DNS Server"},
+            {"key": "sources", "label": "Sources"},
+            {"key": "dns_server", "label": "DNS Servers"},
             {"key": "ttl", "label": "TTL"},
             {"key": "updated_days", "label": "Last Update Days"},
             {"key": "raw", "label": "Raw"},
@@ -519,12 +606,46 @@ def solidserver_context(prefix: str, q: str = "", limit: int = 50, show_debug: b
         normalizer = spec["normalizer"]
         normalized = normalizer(rows)
 
-        context["sections"].append({
-            "key": spec["key"],
-            "title": spec["title"],
-            "columns": spec["columns"],
-            "rows": normalized,
-            "error_count": len(errors),
-        })
+        columns = list(spec["columns"])
+
+        # Keep the noisy Raw JSON only when Debug is enabled.
+        if not show_debug:
+            columns = [col for col in columns if col.get("key") != "raw"]
+            for row in normalized:
+                row.pop("raw", None)
+
+        if spec["key"] == "dns_rr":
+            by_view = {
+                "External": [],
+                "Internal": [],
+                "Unknown": [],
+            }
+
+            for row in normalized:
+                bucket = dns_view_bucket(row.get("view", ""))
+                if bucket not in by_view:
+                    bucket = "Unknown"
+                by_view[bucket].append(row)
+
+            for bucket in ("External", "Internal", "Unknown"):
+                rows_for_bucket = by_view[bucket]
+                if not rows_for_bucket and bucket == "Unknown":
+                    continue
+
+                context["sections"].append({
+                    "key": f"dns_rr_{bucket.lower()}",
+                    "title": f"SolidServer DNS Resource Records - {bucket}",
+                    "columns": columns,
+                    "rows": rows_for_bucket,
+                    "error_count": len(errors),
+                })
+        else:
+            context["sections"].append({
+                "key": spec["key"],
+                "title": spec["title"],
+                "columns": columns,
+                "rows": normalized,
+                "error_count": len(errors),
+            })
 
     return context
