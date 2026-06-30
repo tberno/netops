@@ -2,9 +2,27 @@ from fastapi import APIRouter, Request
 
 from app.core.config import APP_PREFIX
 from app.services.component_lookup import component_lookup_context, lookup_hub_context
+from app.services.solidserver_tool import solidserver_context
 
 
 router = APIRouter()
+
+
+
+@router.get("/tools/solidserver")
+async def solidserver_lookup(request: Request, q: str = "", limit: int = 50, debug: int = 0):
+    context = solidserver_context(
+        prefix=APP_PREFIX,
+        q=q,
+        limit=limit,
+        show_debug=bool(debug),
+    )
+    context["request"] = request
+    return request.app.state.templates.TemplateResponse(
+        request=request,
+        name="tools/solidserver.html",
+        context=context,
+    )
 
 
 @router.get("/tools/lookup")

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <title>{{ title or "NetOps v4" }}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="{{ request.state.app_prefix }}/static/netops.css?v=componentlookups1">
+  <link rel="stylesheet" href="{{ request.state.app_prefix }}/static/netops.css?v=solidservertool1">
 </head>
 <body>
   <header class="topbar">
@@ -45,7 +45,7 @@
           <a href="{{ request.state.app_prefix }}/tools/lookup/macs">MAC / FDB Lookup</a>
           <a href="{{ request.state.app_prefix }}/tools/lookup/vlans">VLAN Lookup</a>
           <a href="{{ request.state.app_prefix }}/tools/lookup/events">Event Lookup</a>
-          <span class="nav-disabled">SolidServer DDI</span>
+          <a href="{{ request.state.app_prefix }}/tools/solidserver">SolidServer DDI</a>
           <span class="nav-disabled">DNS Tools</span>
           <span class="nav-disabled">LLDP Lookup</span>
         </div>
@@ -90,6 +90,6 @@
     {% block content %}{% endblock %}
   </main>
 
-  <script src="{{ request.state.app_prefix }}/static/netops.js?v=componentlookups1"></script>
+  <script src="{{ request.state.app_prefix }}/static/netops.js?v=solidservertool1"></script>
 </body>
 </html>

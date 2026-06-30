@@ -1275,3 +1275,60 @@ button,
 .lookup-error-section h2 {
   border-left-color: #ff7777 !important;
 }
+
+/* v4 standalone SolidServer lookup */
+.lookup-status-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0 12px 0;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 0 9px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--muted);
+  font-weight: 850;
+  font-size: .72rem;
+}
+
+.status-pill.good {
+  border-color: #2c9b69;
+  color: #afffd6;
+}
+
+.status-pill.bad {
+  border-color: #b65d5d;
+  color: #ffd0d0;
+}
+
+.check-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--muted);
+  font-size: .75rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.lookup-tabs a span {
+  margin-left: 6px;
+  opacity: .75;
+}
+
+.lookup-debug pre {
+  white-space: pre-wrap;
+  background: #06171d;
+  border: 1px solid var(--line);
+  padding: 10px;
+  border-radius: 8px;
+  color: var(--muted);
+  max-height: 360px;
+  overflow: auto;
+}
