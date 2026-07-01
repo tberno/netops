@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="tv-dashboard ntp-dashboard">
+  <div class="tv-hero {{ summary.overall_state }}">
+    <div>
+      <div class="tv-eyebrow">Middlebury Network Time</div>
+      <h1>NTP Status</h1>
+      <p>Live checks for Middlebury NTP with third-party reference servers for comparison.</p>
+    </div>
+    <div class="tv-status-badge {{ summary.overall_state }}">
+      {{ summary.overall_status }}
+    </div>
+  </div>
+
+  <div class="tv-kpi-grid">
+    <div class="tv-kpi {{ summary.overall_state }}">
+      <span>Overall</span>
+      <strong>{{ summary.overall_status }}</strong>
+    </div>
+    <div class="tv-kpi good">
+      <span>Healthy</span>
+      <strong>{{ summary.good }}</strong>
+    </div>
+    <div class="tv-kpi warn">
+      <span>Warning</span>
+      <strong>{{ summary.warn }}</strong>
+    </div>
+    <div class="tv-kpi critical">
+      <span>Critical</span>
+      <strong>{{ summary.critical }}</strong>
+    </div>
+    <div class="tv-kpi neutral">
+      <span>Monitored</span>
+      <strong>{{ summary.targets }}</strong>
+    </div>
+    <div class="tv-kpi neutral">
+      <span>References</span>
+      <strong>{{ summary.reference_targets }}</strong>
+    </div>
+  </div>
+
+  {% if primary %}
+  <div class="ntp-primary-card {{ primary.state }}">
+    <div>
+      <span class="ntp-label">Primary service name</span>
+      <strong>{{ primary.host }}</strong>
+      <small>Resolves to {{ primary.resolved_ip or "unresolved" }}</small>
+    </div>
+    <div>
+      <span class="ntp-label">Offset</span>
+      <strong>{{ fmt_ms(primary.offset_ms) }}</strong>
+      <small>Warning &gt; 100 ms, critical &gt; 500 ms</small>
+    </div>
+    <div>
+      <span class="ntp-label">Stratum</span>
+      <strong>{{ primary.stratum if primary.stratum is not none else "—" }}</strong>
+      <small>NTP version {{ primary.version if primary.version is not none else "—" }}</small>
+    </div>
+    <div>
+      <span class="ntp-label">Server time</span>
+      <strong>{{ primary.server_time_text }}</strong>
+      <small>Checked {{ primary.checked_at }}</small>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="ntp-card-grid">
+    {% for check in checks %}
+    <article class="ntp-check-card {{ check.state }}">
+      <div class="ntp-card-head">
+        <div>
+          <h2>{{ check.host }}</h2>
+          <p>{{ check.role_label }} · {{ check.resolved_ip or "DNS failed" }}</p>
+        </div>
+        <span class="ntp-pill {{ check.state }}">{{ check.status }}</span>
+      </div>
+
+      <div class="ntp-metrics">
+        <div>
+          <span>Offset</span>
+          <strong>{{ fmt_ms(check.offset_ms) }}</strong>
+        </div>
+        <div>
+          <span>Delay</span>
+          <strong>{{ fmt_ms(check.delay_ms) }}</strong>
+        </div>
+        <div>
+          <span>Stratum</span>
+          <strong>{{ check.stratum if check.stratum is not none else "—" }}</strong>
+        </div>
+        <div>
+          <span>Mode</span>
+          <strong>{{ check.mode if check.mode is not none else "—" }}</strong>
+        </div>
+      </div>
+
+      <div class="ntp-details">
+        <div><span>Server time</span><strong>{{ check.server_time_text }}</strong></div>
+        <div><span>Checked</span><strong>{{ check.checked_at }}</strong></div>
+        {% if check.error %}
+        <div class="ntp-error"><span>Error</span><strong>{{ check.error }}</strong></div>
+        {% endif %}
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+<script>
+  setTimeout(() => {
+    window.location.reload();
+  }, 60000);
+</script>
+{% endblock %}

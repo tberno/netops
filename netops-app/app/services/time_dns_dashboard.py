@@ -21,6 +21,7 @@ DNS_QTYPE_NAME = {v: k for k, v in DNS_QTYPE.items()}
 DEFAULT_NTP_TARGETS = [
     "time.middlebury.edu",
     "zeus.middlebury.edu",
+    "hera.middlebury.edu",
     "time.cloudflare.com",
     "time.google.com",
     "time.aws.com",
@@ -30,10 +31,17 @@ DEFAULT_NTP_TARGETS = [
 DEFAULT_DNS_QUERIES = [
     "time.middlebury.edu",
     "zeus.middlebury.edu",
+    "hera.middlebury.edu",
+    "miis-infoblox1.middlebury.edu",
+    "miis-infoblox2.middlebury.edu",
     "www.middlebury.edu",
 ]
 
 DEFAULT_RESOLVERS = [
+    {"name": "Zeus SolidServer", "server": "zeus.middlebury.edu", "role": "middlebury"},
+    {"name": "Hera SolidServer", "server": "hera.middlebury.edu", "role": "middlebury"},
+    {"name": "MIIS Infoblox 1", "server": "miis-infoblox1.middlebury.edu", "role": "middlebury"},
+    {"name": "MIIS Infoblox 2", "server": "miis-infoblox2.middlebury.edu", "role": "middlebury"},
     {"name": "Middlebury DNS 1", "server": "140.233.1.4", "role": "middlebury"},
     {"name": "Middlebury DNS 2 / SolidServer", "server": "140.233.2.204", "role": "middlebury"},
     {"name": "Cloudflare DNS", "server": "1.1.1.1", "role": "reference"},
@@ -253,6 +261,92 @@ def _dns_query(resolver: dict[str, str], qname: str, qtype: str = "A", timeout: 
         return result
 
 
+
+def _build_dns_resolver_cards(dns_checks: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    grouped: dict[str, dict[str, Any]] = {}
+
+    for check in dns_checks:
+        key = f'{check["resolver_name"]}|{check["resolver"]}'
+        if key not in grouped:
+            grouped[key] = {
+                "resolver_name": check["resolver_name"],
+                "resolver": check["resolver"],
+                "role": check.get("role", "reference"),
+                "role_label": check.get("role_label", "Third-party reference"),
+                "checks": [],
+            }
+        grouped[key]["checks"].append(check)
+
+    cards: list[dict[str, Any]] = []
+
+    for item in grouped.values():
+        checks = item["checks"]
+        ok_count = sum(1 for c in checks if c.get("state") == "good")
+        warn_count = sum(1 for c in checks if c.get("state") == "warn")
+        critical_count = sum(1 for c in checks if c.get("state") == "critical")
+        failed_count = sum(1 for c in checks if not c.get("ok"))
+
+        latencies = [
+            c["latency_ms"]
+            for c in checks
+            if c.get("latency_ms") is not None and c.get("ok")
+        ]
+
+        avg_latency = sum(latencies) / len(latencies) if latencies else None
+        max_latency = max(latencies) if latencies else None
+
+        slowest = None
+        if latencies:
+            slowest = max(
+                [c for c in checks if c.get("latency_ms") is not None and c.get("ok")],
+                key=lambda c: c["latency_ms"],
+            )
+
+        if critical_count:
+            state = "critical"
+            status = "CRITICAL"
+        elif warn_count:
+            state = "warn"
+            status = "WARN"
+        else:
+            state = "good"
+            status = "OK"
+
+        query_names = [c["query"] for c in checks]
+
+        cards.append(
+            {
+                "resolver_name": item["resolver_name"],
+                "resolver": item["resolver"],
+                "role": item["role"],
+                "role_label": item["role_label"],
+                "state": state,
+                "status": status,
+                "total": len(checks),
+                "ok_count": ok_count,
+                "warn_count": warn_count,
+                "critical_count": critical_count,
+                "failed_count": failed_count,
+                "avg_latency": avg_latency,
+                "max_latency": max_latency,
+                "slowest_query": slowest["query"] if slowest else "—",
+                "slowest_latency": slowest["latency_ms"] if slowest else None,
+                "queries_text": ", ".join(query_names[:6]),
+                "checked_at": checks[0]["checked_at"] if checks else _utc_now(),
+            }
+        )
+
+    role_order = {"middlebury": 0, "reference": 1}
+    state_order = {"critical": 0, "warn": 1, "good": 2}
+    cards.sort(
+        key=lambda c: (
+            role_order.get(c["role"], 9),
+            state_order.get(c["state"], 9),
+            c["resolver_name"],
+        )
+    )
+    return cards
+
 def _min_max_abs_offset(checks: list[dict[str, Any]]) -> tuple[float | None, float | None]:
     values = [abs(c["offset_ms"]) for c in checks if c.get("offset_ms") is not None]
     if not values:
@@ -329,6 +423,7 @@ def time_dns_dashboard_context() -> dict[str, Any]:
         "monitored_ntp": monitored_ntp,
         "reference_ntp": reference_ntp,
         "dns_checks": dns_checks,
+        "dns_resolver_cards": _build_dns_resolver_cards(dns_checks),
         "monitored_dns": monitored_dns,
         "reference_dns": reference_dns,
         "fmt_ms": _fmt_ms,

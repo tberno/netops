@@ -6,7 +6,7 @@
     <div>
       <div class="tv-eyebrow">Middlebury Time and DNS</div>
       <h1>Time &amp; DNS Health</h1>
-      <p>NTP drift, time service reachability, and DNS lookup response checks for TV display.</p>
+      <p>NTP drift, time service reachability, and DNS resolver response checks for TV display.</p>
     </div>
     <div class="tv-status-badge {{ summary.overall_state }}">
       {{ summary.overall_status }}
@@ -68,7 +68,7 @@
     <p>Offset is measured from this NetOps container to each NTP server.</p>
   </div>
 
-  <div class="ntp-card-grid">
+  <div class="ntp-card-grid compact-time-grid">
     {% for check in ntp_checks %}
     <article class="ntp-check-card {{ check.state }}">
       <div class="ntp-card-head">
@@ -81,7 +81,7 @@
 
       <div class="ntp-metrics">
         <div>
-          <span>Offset / Drift</span>
+          <span>Offset</span>
           <strong>{{ fmt_ms(check.offset_ms) }}</strong>
         </div>
         <div>
@@ -100,7 +100,6 @@
 
       <div class="ntp-details">
         <div><span>Server time</span><strong>{{ check.server_time_text }}</strong></div>
-        <div><span>Checked</span><strong>{{ check.checked_at }}</strong></div>
         {% if check.error %}
         <div class="ntp-error"><span>Error</span><strong>{{ check.error }}</strong></div>
         {% endif %}
@@ -110,41 +109,51 @@
   </div>
 
   <div class="dashboard-section-title">
-    <h2>DNS Response Checks</h2>
-    <p>Queries are tested against Middlebury resolvers and public references.</p>
+    <h2>DNS Resolver Health</h2>
+    <p>One card per resolver. Each card rolls up all tested lookups.</p>
   </div>
 
-  <div class="dns-check-table-wrap">
-    <table class="dns-check-table">
-      <thead>
-        <tr>
-          <th>Status</th>
-          <th>Resolver</th>
-          <th>Query</th>
-          <th>Response</th>
-          <th>Answer</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for check in dns_checks %}
-        <tr class="{{ check.state }}">
-          <td><span class="ntp-pill {{ check.state }}">{{ check.status }}</span></td>
-          <td>
-            <strong>{{ check.resolver_name }}</strong>
-            <small>{{ check.role_label }} · {{ check.resolver }}</small>
-          </td>
-          <td>{{ check.query }}</td>
-          <td><strong>{{ fmt_ms(check.latency_ms) }}</strong></td>
-          <td>
-            <span>{{ check.answer_text }}</span>
-            {% if check.error %}
-            <small class="ntp-error-text">{{ check.error }}</small>
-            {% endif %}
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+  <div class="dns-card-grid dns-aggregate-grid">
+    {% for card in dns_resolver_cards %}
+    <article class="dns-check-card {{ card.state }}">
+      <div class="ntp-card-head">
+        <div>
+          <h2>{{ card.resolver_name }}</h2>
+          <p>{{ card.role_label }} · {{ card.resolver }}</p>
+        </div>
+        <span class="ntp-pill {{ card.state }}">{{ card.status }}</span>
+      </div>
+
+      <div class="ntp-metrics dns-metrics">
+        <div>
+          <span>Avg Response</span>
+          <strong>{{ fmt_ms(card.avg_latency) }}</strong>
+        </div>
+        <div>
+          <span>Max Response</span>
+          <strong>{{ fmt_ms(card.max_latency) }}</strong>
+        </div>
+        <div>
+          <span>Checks</span>
+          <strong>{{ card.ok_count }}/{{ card.total }}</strong>
+        </div>
+        <div>
+          <span>Failed</span>
+          <strong>{{ card.failed_count }}</strong>
+        </div>
+      </div>
+
+      <div class="dns-answer-box">
+        <span>Slowest Lookup</span>
+        <strong>{{ card.slowest_query }} · {{ fmt_ms(card.slowest_latency) }}</strong>
+      </div>
+
+      <div class="dns-answer-box dns-queries-compact">
+        <span>Queries Tested</span>
+        <strong>{{ card.queries_text }}</strong>
+      </div>
+    </article>
+    {% endfor %}
   </div>
 </section>
 

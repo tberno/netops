@@ -5387,3 +5387,136 @@ table a:hover,
     margin-top: 5px;
   }
 }
+
+/* DNS cards for Time + DNS dashboard */
+.dns-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));
+  gap: 14px;
+}
+
+.dns-check-card {
+  background: #202a32;
+  border: 1px solid #38434c;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.dns-check-card.good {
+  border-color: #2e8b57;
+}
+
+.dns-check-card.warn {
+  border-color: #b58b28;
+}
+
+.dns-check-card.critical {
+  border-color: #a94442;
+}
+
+.dns-query-title {
+  background: #182128;
+  border: 1px solid #303b44;
+  border-radius: 9px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.dns-query-title span,
+.dns-answer-box span,
+.dns-error-box span {
+  display: block;
+  color: #9fb2bf;
+  font-size: .78rem;
+  margin-bottom: 4px;
+}
+
+.dns-query-title strong {
+  display: block;
+  font-size: 1.15rem;
+}
+
+.dns-metrics {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.dns-answer-box,
+.dns-error-box {
+  border-top: 1px solid #303b44;
+  padding-top: 10px;
+  margin-top: 10px;
+}
+
+.dns-answer-box strong {
+  display: block;
+  font-size: .92rem;
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+.dns-error-box strong {
+  color: #ff9a9a;
+  display: block;
+  word-break: break-word;
+}
+
+@media (max-width: 1000px) {
+  .dns-card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dns-metrics {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Cleaner aggregate DNS cards */
+.dns-aggregate-grid {
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+}
+
+.dns-aggregate-grid .dns-check-card {
+  min-height: 0;
+}
+
+.dns-aggregate-grid .ntp-card-head {
+  margin-bottom: 10px;
+}
+
+.dns-aggregate-grid .ntp-card-head h2 {
+  font-size: 1.15rem;
+}
+
+.dns-aggregate-grid .ntp-card-head p {
+  font-size: .78rem;
+}
+
+.dns-aggregate-grid .dns-answer-box {
+  margin-top: 8px;
+  padding-top: 8px;
+}
+
+.dns-aggregate-grid .dns-answer-box strong {
+  font-size: .86rem;
+}
+
+.dns-queries-compact strong {
+  color: #c9d7df;
+  font-weight: 600;
+}
+
+.compact-time-grid {
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+}
+
+.compact-time-grid .ntp-check-card {
+  min-height: 0;
+}
+
+.compact-time-grid .ntp-card-head h2 {
+  font-size: 1.15rem;
+}
+
+.compact-time-grid .ntp-metrics strong {
+  font-size: 1rem;
+}
