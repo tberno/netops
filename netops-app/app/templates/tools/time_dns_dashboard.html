@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="tv-dashboard time-dns-dashboard">
+  <div class="tv-hero {{ summary.overall_state }}">
+    <div>
+      <div class="tv-eyebrow">Middlebury Time and DNS</div>
+      <h1>Time &amp; DNS Health</h1>
+      <p>NTP drift, time service reachability, and DNS lookup response checks for TV display.</p>
+    </div>
+    <div class="tv-status-badge {{ summary.overall_state }}">
+      {{ summary.overall_status }}
+    </div>
+  </div>
+
+  <div class="tv-kpi-grid time-dns-kpis">
+    <div class="tv-kpi {{ summary.overall_state }}">
+      <span>Overall</span>
+      <strong>{{ summary.overall_status }}</strong>
+    </div>
+    <div class="tv-kpi good">
+      <span>Healthy</span>
+      <strong>{{ summary.good }}</strong>
+    </div>
+    <div class="tv-kpi warn">
+      <span>Warning</span>
+      <strong>{{ summary.warn }}</strong>
+    </div>
+    <div class="tv-kpi critical">
+      <span>Critical</span>
+      <strong>{{ summary.critical }}</strong>
+    </div>
+    <div class="tv-kpi neutral">
+      <span>Max NTP Drift</span>
+      <strong>{{ fmt_ms(summary.ntp_max_offset) }}</strong>
+    </div>
+    <div class="tv-kpi neutral">
+      <span>Avg DNS Response</span>
+      <strong>{{ fmt_ms(summary.dns_avg) }}</strong>
+    </div>
+  </div>
+
+  <div class="ntp-primary-card {{ summary.overall_state }}">
+    <div>
+      <span class="ntp-label">Monitored Checks</span>
+      <strong>{{ summary.monitored_total }}</strong>
+      <small>Middlebury NTP and DNS only</small>
+    </div>
+    <div>
+      <span class="ntp-label">Reference Checks</span>
+      <strong>{{ summary.reference_total }}</strong>
+      <small>Third-party comparison only</small>
+    </div>
+    <div>
+      <span class="ntp-label">Middlebury DNS Max</span>
+      <strong>{{ fmt_ms(summary.dns_max) }}</strong>
+      <small>Warning &gt; 100 ms, critical &gt; 250 ms</small>
+    </div>
+    <div>
+      <span class="ntp-label">Last Refresh</span>
+      <strong>{{ summary.checked_at }}</strong>
+      <small>Page auto-refreshes every 60 seconds</small>
+    </div>
+  </div>
+
+  <div class="dashboard-section-title">
+    <h2>NTP / Time Drift</h2>
+    <p>Offset is measured from this NetOps container to each NTP server.</p>
+  </div>
+
+  <div class="ntp-card-grid">
+    {% for check in ntp_checks %}
+    <article class="ntp-check-card {{ check.state }}">
+      <div class="ntp-card-head">
+        <div>
+          <h2>{{ check.host }}</h2>
+          <p>{{ check.role_label }} · {{ check.resolved_ip or "DNS failed" }}</p>
+        </div>
+        <span class="ntp-pill {{ check.state }}">{{ check.status }}</span>
+      </div>
+
+      <div class="ntp-metrics">
+        <div>
+          <span>Offset / Drift</span>
+          <strong>{{ fmt_ms(check.offset_ms) }}</strong>
+        </div>
+        <div>
+          <span>Delay</span>
+          <strong>{{ fmt_ms(check.delay_ms) }}</strong>
+        </div>
+        <div>
+          <span>Stratum</span>
+          <strong>{{ check.stratum if check.stratum is not none else "—" }}</strong>
+        </div>
+        <div>
+          <span>Version</span>
+          <strong>{{ check.version if check.version is not none else "—" }}</strong>
+        </div>
+      </div>
+
+      <div class="ntp-details">
+        <div><span>Server time</span><strong>{{ check.server_time_text }}</strong></div>
+        <div><span>Checked</span><strong>{{ check.checked_at }}</strong></div>
+        {% if check.error %}
+        <div class="ntp-error"><span>Error</span><strong>{{ check.error }}</strong></div>
+        {% endif %}
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+
+  <div class="dashboard-section-title">
+    <h2>DNS Response Checks</h2>
+    <p>Queries are tested against Middlebury resolvers and public references.</p>
+  </div>
+
+  <div class="dns-check-table-wrap">
+    <table class="dns-check-table">
+      <thead>
+        <tr>
+          <th>Status</th>
+          <th>Resolver</th>
+          <th>Query</th>
+          <th>Response</th>
+          <th>Answer</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for check in dns_checks %}
+        <tr class="{{ check.state }}">
+          <td><span class="ntp-pill {{ check.state }}">{{ check.status }}</span></td>
+          <td>
+            <strong>{{ check.resolver_name }}</strong>
+            <small>{{ check.role_label }} · {{ check.resolver }}</small>
+          </td>
+          <td>{{ check.query }}</td>
+          <td><strong>{{ fmt_ms(check.latency_ms) }}</strong></td>
+          <td>
+            <span>{{ check.answer_text }}</span>
+            {% if check.error %}
+            <small class="ntp-error-text">{{ check.error }}</small>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<script>
+  setTimeout(() => {
+    window.location.reload();
+  }, 60000);
+</script>
+{% endblock %}

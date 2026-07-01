@@ -1,15 +1,23 @@
 import os
 
-from fastapi import APIRouter, Request
+from app.services.dns_dashboard import dns_dashboard_context
+from fastapi import Response, APIRouter, Request
 
 from app.core.config import APP_PREFIX
 from app.services.component_lookup import component_lookup_context, lookup_hub_context
 from app.services.solidserver_tool import solidserver_context
 from app.services.mist_tool import mist_context, mist_site_detail_context, mist_switch_detail_context, mist_site_detail_context, mist_switch_detail_context
 from app.services.universal_tool import universal_context
+from app.services.dns_domain_check import dns_domain_check_context
+from app.services.device_page import device_page_context
+from app.services.dns_usage import dns_usage_context, dns_usage_csv
+from app.services.ntp_dashboard import ntp_dashboard_context
+from fastapi.templating import Jinja2Templates
+from app.services.time_dns_dashboard import time_dns_dashboard_context
 
 
 router = APIRouter()
+templates = Jinja2Templates(directory="/app/app/templates")
 
 
 
@@ -95,24 +103,31 @@ async def mist_switch_detail(request: Request, site_id: str, mac: str):
             },
         )
 
-
 @router.get("/tools/dns")
-async def dns_tools_placeholder(request: Request):
+async def dns_tools(
+    request: Request,
+    zone: str = "middlebury.edu",
+    host: str = "catalog.middlebury.edu",
+    qtype: str = "A",
+    cf_ns: str = "ns0245.secondary.cloudflare.com,ns0045.secondary.cloudflare.com",
+    parent_servers: str = "a.edu-servers.net,h.edu-servers.net",
+    public_resolvers: str = "1.1.1.1,8.8.8.8,9.9.9.9,208.67.222.222",
+    campus_resolvers: str = "140.233.1.4,140.233.2.204",
+):
+    context = dns_domain_check_context(
+        zone=zone,
+        host=host,
+        qtype=qtype,
+        cf_ns=cf_ns,
+        parent_servers=parent_servers,
+        public_resolvers=public_resolvers,
+        campus_resolvers=campus_resolvers,
+    )
+    context["request"] = request
     return request.app.state.templates.TemplateResponse(
         request=request,
-        name="tools/placeholder.html",
-        context={
-            "request": request,
-            "title": "DNS Tools",
-            "subtitle": "Placeholder for v4 DNS checks.",
-            "message": "This will become the DNS resolver, record, delegation, SOA/serial, and Cloudflare secondary validation tool.",
-            "next_steps": [
-                "Port the known-good v3 DNS lookup tools.",
-                "Add resolver selector for Hera, Zeus, Cloudflare, Google, Quad9.",
-                "Add record checks for A, AAAA, CNAME, MX, NS, SOA, TXT, PTR.",
-                "Add zone serial and secondary sync checks.",
-            ],
-        },
+        name="tools/dns_domain_check.html",
+        context=context,
     )
 
 
@@ -189,6 +204,32 @@ async def dashboards_home(request: Request):
         },
     )
 
+
+
+@router.get("/dashboards/dns")
+async def dns_dashboard(request: Request, zone: str = ""):
+    context = dns_dashboard_context(zone=zone or None)
+    context["request"] = request
+    return request.app.state.templates.TemplateResponse(
+        request=request,
+        name="tools/dns_dashboard.html",
+        context=context,
+    )
+
+
+
+@router.get("/dashboards/ntp")
+async def ntp_dashboard(request: Request):
+    context = ntp_dashboard_context()
+    context["request"] = request
+    return templates.TemplateResponse(request, "tools/ntp_dashboard.html", context)
+
+
+@router.get("/dashboards/time-dns")
+async def time_dns_dashboard(request: Request):
+    context = time_dns_dashboard_context()
+    context["request"] = request
+    return templates.TemplateResponse(request, "tools/time_dns_dashboard.html", context)
 
 @router.get("/dashboards/{page}")
 async def dashboards_placeholder(request: Request, page: str):
@@ -294,17 +335,228 @@ async def pdf_placeholder(request: Request, page: str):
         },
     )
 
-
 @router.get("/tools/dns")
-async def dns_tools_placeholder(request: Request):
+async def dns_tools(
+    request: Request,
+    zone: str = "middlebury.edu",
+    host: str = "catalog.middlebury.edu",
+    qtype: str = "A",
+    cf_ns: str = "ns0245.secondary.cloudflare.com,ns0045.secondary.cloudflare.com",
+    parent_servers: str = "a.edu-servers.net,h.edu-servers.net",
+    public_resolvers: str = "1.1.1.1,8.8.8.8,9.9.9.9,208.67.222.222",
+    campus_resolvers: str = "140.233.1.4,140.233.2.204",
+):
+    context = dns_domain_check_context(
+        zone=zone,
+        host=host,
+        qtype=qtype,
+        cf_ns=cf_ns,
+        parent_servers=parent_servers,
+        public_resolvers=public_resolvers,
+        campus_resolvers=campus_resolvers,
+    )
+    context["request"] = request
+    return request.app.state.templates.TemplateResponse(
+        request=request,
+        name="tools/dns_domain_check.html",
+        context=context,
+    )
+
+
+@router.get("/dashboards")
+async def dashboards_home(request: Request):
     return request.app.state.templates.TemplateResponse(
         request=request,
         name="tools/placeholder.html",
-        context={
-            "request": request,
-            "title": "DNS Tools",
-            "subtitle": "DNS tools placeholder",
-            "message": "DNS tools are not fully ported to v4 yet.",
-            "next_steps": ["Use Universal Lookup or SolidServer DDI for now.", "Port v3 DNS tools next."],
-        },
+        context=placeholder_context(
+            request,
+            "Dashboards",
+            "NetOps v4 dashboard landing page",
+            "Dashboard landing page placeholder. Current working views are under Reports and Tools.",
+            ["Use Reports for operational tables.", "Use Tools for Universal Lookup, Mist, SolidServer, and DNS tools."],
+        ),
     )
+
+
+@router.get("/dashboards/{page}")
+async def dashboards_page(request: Request, page: str):
+    return request.app.state.templates.TemplateResponse(
+        request=request,
+        name="tools/placeholder.html",
+        context=placeholder_context(
+            request,
+            f"Dashboard: {page}",
+            "Dashboard placeholder",
+            "This dashboard route is reserved for future v4 dashboard work.",
+        ),
+    )
+
+
+@router.get("/admin")
+async def admin_home(request: Request):
+    return request.app.state.templates.TemplateResponse(
+        request=request,
+        name="tools/placeholder.html",
+        context=placeholder_context(
+            request,
+            "Admin",
+            "Admin landing page",
+            "Admin placeholder. Use /health for raw app health.",
+        ),
+    )
+
+
+@router.get("/admin/{page}")
+async def admin_page(request: Request, page: str):
+    return request.app.state.templates.TemplateResponse(
+        request=request,
+        name="tools/placeholder.html",
+        context=placeholder_context(
+            request,
+            f"Admin: {page}",
+            "Admin placeholder",
+            "Admin route placeholder.",
+        ),
+    )
+
+
+@router.get("/new")
+async def new_home(request: Request):
+    return request.app.state.templates.TemplateResponse(
+        request=request,
+        name="tools/placeholder.html",
+        context=placeholder_context(
+            request,
+            "New",
+            "New item landing page",
+            "Placeholder for future report/tool creation workflows.",
+        ),
+    )
+
+
+@router.get("/new/{page}")
+async def new_page(request: Request, page: str):
+    return request.app.state.templates.TemplateResponse(
+        request=request,
+        name="tools/placeholder.html",
+        context=placeholder_context(
+            request,
+            f"New: {page}",
+            "New placeholder",
+            "New workflow placeholder.",
+        ),
+    )
+
+
+@router.get("/pdf")
+async def pdf_home(request: Request):
+    return request.app.state.templates.TemplateResponse(
+        request=request,
+        name="tools/placeholder.html",
+        context=placeholder_context(
+            request,
+            "PDF",
+            "PDF landing page",
+            "PDF export placeholder. Use browser print/PDF for now.",
+        ),
+    )
+
+
+@router.get("/pdf/{page}")
+async def pdf_page(request: Request, page: str):
+    return request.app.state.templates.TemplateResponse(
+        request=request,
+        name="tools/placeholder.html",
+        context=placeholder_context(
+            request,
+            f"PDF: {page}",
+            "PDF placeholder",
+            "PDF route placeholder.",
+        ),
+    )
+
+@router.get("/tools/dns")
+async def dns_tools(
+    request: Request,
+    zone: str = "middlebury.edu",
+    host: str = "catalog.middlebury.edu",
+    qtype: str = "A",
+    cf_ns: str = "ns0245.secondary.cloudflare.com,ns0045.secondary.cloudflare.com",
+    parent_servers: str = "a.edu-servers.net,h.edu-servers.net",
+    public_resolvers: str = "1.1.1.1,8.8.8.8,9.9.9.9,208.67.222.222",
+    campus_resolvers: str = "140.233.1.4,140.233.2.204",
+):
+    context = dns_domain_check_context(
+        zone=zone,
+        host=host,
+        qtype=qtype,
+        cf_ns=cf_ns,
+        parent_servers=parent_servers,
+        public_resolvers=public_resolvers,
+        campus_resolvers=campus_resolvers,
+    )
+    context["request"] = request
+    return request.app.state.templates.TemplateResponse(
+        request=request,
+        name="tools/dns_domain_check.html",
+        context=context,
+    )
+
+
+@router.get("/tools/lldp")
+async def lldp_tools(request: Request):
+    return request.app.state.templates.TemplateResponse(
+        request=request,
+        name="tools/placeholder.html",
+        context=placeholder_context(
+            request,
+            "LLDP Lookup",
+            "LLDP lookup placeholder",
+            "LLDP lookup is not fully ported to v4 yet.",
+            ["Use Interface Lookup or Universal Lookup for now."],
+        ),
+    )
+
+
+@router.get("/tools/device/{device_id}")
+async def midd_device_page(request: Request, device_id: int):
+    context = device_page_context(device_id)
+    context["request"] = request
+    return request.app.state.templates.TemplateResponse(
+        request=request,
+        name="tools/device_page.html",
+        context=context,
+    )
+
+
+
+
+@router.get("/tools/dns-usage.csv")
+async def dns_usage_csv_page(request: Request, q: str = "", limit_zones: int = 5000, limit_rr: int = 100000):
+    context = dns_usage_context(
+        q=q,
+        limit_zones=max(100, min(int(limit_zones or 5000), 20000)),
+        limit_rr=max(1000, min(int(limit_rr or 100000), 500000)),
+    )
+    csv_text = dns_usage_csv(context)
+    filename = "dns-external-zone-usage.csv"
+    return Response(
+        content=csv_text,
+        media_type="text/csv",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
+
+@router.get("/tools/dns-usage")
+async def dns_usage_page(request: Request, q: str = "", limit_zones: int = 5000, limit_rr: int = 100000):
+    context = dns_usage_context(
+        q=q,
+        limit_zones=max(100, min(int(limit_zones or 5000), 20000)),
+        limit_rr=max(1000, min(int(limit_rr or 100000), 500000)),
+    )
+    context["request"] = request
+    return request.app.state.templates.TemplateResponse(
+        request=request,
+        name="tools/dns_usage.html",
+        context=context,
+    )
+

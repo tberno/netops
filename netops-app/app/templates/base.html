@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <title>{{ title or "NetOps v4" }}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="{{ request.state.app_prefix }}/static/netops.css?v=universal-preview-chunks2">
+  <link rel="stylesheet" href="{{ request.state.app_prefix }}/static/netops.css?v=time-dns1">
 </head>
 <body>
   <header class="topbar">
@@ -15,10 +15,10 @@
         <a class="nav-link" href="{{ request.state.app_prefix }}/reports/interface-statistics">Dashboards</a>
         <div class="nav-menu">
           <a href="{{ request.state.app_prefix }}/reports/interface-statistics">All Dashboards</a>
-          <span class="nav-disabled">Device</span>
-          <span class="nav-disabled">Events</span>
-          <span class="nav-disabled">Interface</span>
-          <span class="nav-disabled">Status</span>
+          <a href="{{ request.state.app_prefix }}/dashboards/device">Device</a>
+          <a href="{{ request.state.app_prefix }}/dashboards/events">Events</a>
+          <a href="{{ request.state.app_prefix }}/dashboards/interface">Interface</a>
+          <a href="{{ request.state.app_prefix }}/dashboards/status">Status</a>
         </div>
       </div>
 
@@ -49,6 +49,7 @@
           <a href="{{ request.state.app_prefix }}/tools/solidserver">SolidServer DDI</a>
           <a href="{{ request.state.app_prefix }}/tools/mist">Mist Lookup</a>
           <a href="{{ request.state.app_prefix }}/tools/dns">DNS Tools</a>
+          <a href="{{ request.state.app_prefix }}/tools/dns-usage">DNS Usage</a>
           <a href="{{ request.state.app_prefix }}/tools/lldp">LLDP Lookup</a>
         </div>
       </div>
@@ -66,7 +67,7 @@
       <div class="nav-item">
         <a class="nav-link" href="{{ request.state.app_prefix }}/tools/lookup">New</a>
         <div class="nav-menu">
-          <span class="nav-disabled">Device</span>
+          <a href="{{ request.state.app_prefix }}/dashboards/device">Device</a>
           <span class="nav-disabled">Report</span>
           <span class="nav-disabled">Tool</span>
         </div>

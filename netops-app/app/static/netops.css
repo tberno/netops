@@ -2886,3 +2886,2504 @@ button,
 .topbar .main-nav .nav-menu .nav-disabled {
   color: #697982 !important;
 }
+
+/* DNS smart display dashboard */
+.smart-dashboard {
+  padding-bottom: 40px;
+}
+
+.dashboard-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.dashboard-zone-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dashboard-zone-form label {
+  color: var(--muted);
+  font-size: .78rem;
+  font-weight: 900;
+}
+
+.dashboard-zone-form select {
+  margin-left: 8px;
+  min-width: 190px;
+  padding: 7px 9px;
+  border-radius: 7px;
+  border: 1px solid var(--line);
+  background: #eef8fb;
+  color: #061b22;
+  font-weight: 850;
+}
+
+.dns-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.dns-kpi {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel);
+  padding: 12px;
+}
+
+.dns-kpi strong {
+  display: block;
+  font-size: 1.55rem;
+  line-height: 1;
+}
+
+.dns-kpi span {
+  display: block;
+  color: var(--muted);
+  font-size: .76rem;
+  font-weight: 850;
+  margin-top: 6px;
+}
+
+.dns-kpi.good {
+  border-color: rgba(52, 211, 153, .45);
+}
+
+.dns-kpi.warn {
+  border-color: rgba(251, 191, 36, .65);
+}
+
+.dns-kpi.bad {
+  border-color: rgba(248, 113, 113, .65);
+}
+
+.dns-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.dns-status-card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(7, 42, 52, .88);
+  padding: 12px;
+}
+
+.dns-status-card header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.dns-status-card h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.dns-pill {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px 8px;
+  font-size: .68rem;
+  font-weight: 900;
+  color: #67e8f9;
+}
+
+.dns-card-main {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.dns-card-main div {
+  background: rgba(2, 22, 28, .45);
+  border: 1px solid rgba(103, 232, 249, .12);
+  border-radius: 8px;
+  padding: 7px 8px;
+  min-width: 0;
+}
+
+.dns-card-main span {
+  display: block;
+  color: var(--muted);
+  font-size: .65rem;
+  font-weight: 850;
+}
+
+.dns-card-main strong {
+  display: block;
+  font-size: .82rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dns-status-card.status-current {
+  border-color: rgba(52, 211, 153, .5);
+}
+
+.dns-status-card.status-behind,
+.dns-status-card.status-unknown {
+  border-color: rgba(251, 191, 36, .65);
+}
+
+.dns-warning,
+.dns-error {
+  margin-top: 8px;
+  border-radius: 8px;
+  padding: 7px 8px;
+  font-size: .74rem;
+  font-weight: 850;
+}
+
+.dns-warning {
+  background: rgba(251, 191, 36, .12);
+  border: 1px solid rgba(251, 191, 36, .35);
+}
+
+.dns-error {
+  background: rgba(248, 113, 113, .12);
+  border: 1px solid rgba(248, 113, 113, .35);
+}
+
+@media (min-width: 1600px) {
+  .dns-card-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* DNS view split note */
+.dns-view-note {
+  margin: 10px 0 12px 0;
+  border: 1px solid rgba(251, 191, 36, .45);
+  background: rgba(251, 191, 36, .10);
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: var(--text);
+  font-weight: 850;
+}
+
+/* DNS dashboard cleanup */
+.dns-section-note {
+  margin: -2px 0 8px 0;
+  color: var(--muted);
+  font-size: .76rem;
+}
+
+.dns-kpi.neutral strong {
+  font-size: 1.35rem;
+}
+
+/* Internal DNS response cards */
+.internal-dns-card-grid {
+  margin-top: 8px;
+  margin-bottom: 16px;
+}
+
+.internal-dns-card-grid .dns-status-card {
+  border-color: rgba(103, 232, 249, .28);
+}
+
+/* CA DNS remote reachability */
+.ca-dns-details {
+  border-color: rgba(251, 191, 36, .35);
+}
+
+.ca-dns-details summary {
+  cursor: pointer;
+}
+
+/* Grouped DNS response-time section */
+.response-time-section {
+  border-color: rgba(103, 232, 249, .26);
+}
+
+.response-time-section table td:nth-child(6) {
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.response-time-section table td:nth-child(8) {
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+/* TV-friendly DNS response-time table */
+.dns-dashboard-page .response-time-section {
+  margin-top: 18px;
+  margin-bottom: 18px;
+  border-width: 2px;
+}
+
+.dns-dashboard-page .response-time-section .tv-table-title,
+.dns-dashboard-page .response-time-section h2 {
+  font-size: 1.45rem;
+  line-height: 1.15;
+}
+
+.dns-dashboard-page .response-time-section .dns-section-note {
+  font-size: .95rem;
+  line-height: 1.35;
+  margin-bottom: 12px;
+}
+
+.dns-dashboard-page .response-time-section table {
+  font-size: 1.02rem;
+}
+
+.dns-dashboard-page .response-time-section table th {
+  font-size: .82rem;
+  padding: 12px 14px;
+  white-space: nowrap;
+}
+
+.dns-dashboard-page .response-time-section table td {
+  padding: 13px 14px;
+  line-height: 1.25;
+  vertical-align: middle;
+}
+
+.dns-dashboard-page .response-time-section table td:nth-child(1),
+.dns-dashboard-page .response-time-section table td:nth-child(2),
+.dns-dashboard-page .response-time-section table td:nth-child(4),
+.dns-dashboard-page .response-time-section table td:nth-child(5),
+.dns-dashboard-page .response-time-section table td:nth-child(6),
+.dns-dashboard-page .response-time-section table td:nth-child(8) {
+  font-weight: 900;
+}
+
+.dns-dashboard-page .response-time-section table td:nth-child(6) {
+  font-size: 1.14rem;
+  white-space: nowrap;
+}
+
+.dns-dashboard-page .response-time-section table td:nth-child(8) {
+  text-transform: uppercase;
+}
+
+.dns-dashboard-page .response-time-section table td:nth-child(9) {
+  color: var(--muted);
+  font-size: .9rem;
+}
+
+@media (min-width: 1400px) {
+  .dns-dashboard-page .response-time-section table {
+    font-size: 1.08rem;
+  }
+
+  .dns-dashboard-page .response-time-section table td {
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+}
+
+/* Clean TV DNS dashboard */
+.dns-dashboard-page .dns-tv-kpis {
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  margin-bottom: 18px;
+}
+
+.dns-dashboard-page .dns-live-checks {
+  border-width: 2px;
+  border-color: rgba(103, 232, 249, .28);
+  margin-top: 16px;
+}
+
+.dns-dashboard-page .dns-live-checks h2 {
+  font-size: 1.55rem;
+  line-height: 1.15;
+}
+
+.dns-dashboard-page .dns-live-checks h2 span {
+  font-size: 1rem;
+}
+
+.dns-dashboard-page .dns-live-checks .dns-section-note {
+  font-size: 1rem;
+  line-height: 1.35;
+  margin-bottom: 12px;
+}
+
+.dns-dashboard-page .dns-live-checks table {
+  font-size: 1.08rem;
+}
+
+.dns-dashboard-page .dns-live-checks table th {
+  font-size: .82rem;
+  padding: 12px 14px;
+  white-space: nowrap;
+}
+
+.dns-dashboard-page .dns-live-checks table td {
+  padding: 14px 14px;
+  line-height: 1.25;
+  vertical-align: middle;
+}
+
+.dns-dashboard-page .dns-live-checks table td:nth-child(1),
+.dns-dashboard-page .dns-live-checks table td:nth-child(2),
+.dns-dashboard-page .dns-live-checks table td:nth-child(4),
+.dns-dashboard-page .dns-live-checks table td:nth-child(5),
+.dns-dashboard-page .dns-live-checks table td:nth-child(6),
+.dns-dashboard-page .dns-live-checks table td:nth-child(8) {
+  font-weight: 900;
+}
+
+.dns-dashboard-page .dns-live-checks table td:nth-child(6) {
+  font-size: 1.18rem;
+  white-space: nowrap;
+}
+
+.dns-dashboard-page .dns-live-checks table td:nth-child(8) {
+  text-transform: uppercase;
+}
+
+.dns-dashboard-page .dns-live-checks table td:nth-child(9) {
+  color: var(--muted);
+  font-size: .93rem;
+}
+
+@media (min-width: 1600px) {
+  .dns-dashboard-page .dns-live-checks table {
+    font-size: 1.16rem;
+  }
+
+  .dns-dashboard-page .dns-live-checks table td {
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+}
+
+/* MiddKIPS-style theme override: neutral dark gray + blue accents */
+:root {
+  --bg: #1f272d;
+  --bg2: #182025;
+  --panel: #252f36;
+  --panel2: #202930;
+  --panel3: #1a2228;
+  --line: #3a4650;
+  --line2: #4a5660;
+  --text: #f2f7fb;
+  --muted: #a9bcc8;
+  --muted2: #7f94a1;
+  --accent: #6ed7ff;
+  --accent2: #8ee4ff;
+  --good: #4ac26b;
+  --warn: #d6a642;
+  --bad: #d65c5c;
+  --shadow: rgba(0, 0, 0, .32);
+}
+
+html,
+body {
+  background: var(--bg) !important;
+  color: var(--text) !important;
+}
+
+body {
+  background:
+    linear-gradient(180deg, #202930 0%, #1b2329 100%) !important;
+}
+
+/* Top navigation */
+.topbar,
+.site-header,
+.app-header,
+header.topbar {
+  background: #151c21 !important;
+  border-bottom: 1px solid #303a42 !important;
+  box-shadow: none !important;
+}
+
+.brand,
+.logo,
+.topbar .brand,
+.topbar a.brand {
+  color: #ffffff !important;
+  text-shadow: none !important;
+}
+
+.main-nav a,
+.topbar a,
+.nav a {
+  color: #d8e6ee !important;
+}
+
+.main-nav a:hover,
+.topbar a:hover,
+.nav a:hover {
+  color: #ffffff !important;
+  background: #26323a !important;
+}
+
+/* Dropdowns */
+.main-nav .nav-menu,
+.topbar .nav-menu {
+  background: #202930 !important;
+  border: 1px solid #3a4650 !important;
+  box-shadow: 0 10px 22px rgba(0,0,0,.35) !important;
+}
+
+.main-nav .nav-menu a,
+.topbar .nav-menu a {
+  color: #dceaf2 !important;
+}
+
+.main-nav .nav-menu a:hover,
+.topbar .nav-menu a:hover {
+  background: #303c45 !important;
+  color: #ffffff !important;
+}
+
+/* Main content */
+main,
+.page,
+.lookup-page,
+.smart-dashboard {
+  background: transparent !important;
+}
+
+h1,
+h2,
+h3 {
+  color: #ffffff !important;
+  text-shadow: none !important;
+}
+
+.meta,
+.subtle,
+small,
+.muted {
+  color: var(--muted) !important;
+}
+
+/* Cards / panels */
+.card,
+.lookup-section,
+.dns-kpi,
+.dns-status-card,
+.stat-card,
+.metric-card,
+.empty-card,
+details.lookup-section {
+  background: var(--panel) !important;
+  border: 1px solid var(--line) !important;
+  box-shadow: none !important;
+  color: var(--text) !important;
+}
+
+.lookup-section h2,
+.card h2,
+.dns-status-card h2 {
+  color: #ffffff !important;
+}
+
+/* Remove the bright teal/neon feel */
+.dns-kpi.good,
+.dns-kpi.warn,
+.dns-kpi.bad,
+.dns-status-card.status-current,
+.dns-status-card.status-behind,
+.dns-status-card.status-unknown,
+.response-time-section,
+.dns-live-checks {
+  box-shadow: none !important;
+}
+
+.dns-kpi.good {
+  border-color: rgba(74, 194, 107, .55) !important;
+}
+
+.dns-kpi.warn {
+  border-color: rgba(214, 166, 66, .65) !important;
+}
+
+.dns-kpi.bad {
+  border-color: rgba(214, 92, 92, .65) !important;
+}
+
+.dns-kpi.neutral {
+  border-color: var(--line) !important;
+}
+
+.dns-kpi strong {
+  color: #ffffff !important;
+  text-shadow: none !important;
+}
+
+.dns-kpi span {
+  color: #b8c9d4 !important;
+}
+
+/* Tables: MiddKIPS-style */
+table,
+.data-table,
+.lookup-table {
+  background: #202930 !important;
+  border-color: #3a4650 !important;
+  color: #f2f7fb !important;
+}
+
+table thead th,
+.data-table thead th,
+.lookup-table thead th {
+  background: #182025 !important;
+  color: #ffffff !important;
+  border-color: #3a4650 !important;
+  text-shadow: none !important;
+}
+
+table tbody tr,
+.data-table tbody tr,
+.lookup-table tbody tr {
+  background: #222c33 !important;
+}
+
+table tbody tr:nth-child(even),
+.data-table tbody tr:nth-child(even),
+.lookup-table tbody tr:nth-child(even) {
+  background: #253039 !important;
+}
+
+table tbody tr:hover,
+.data-table tbody tr:hover,
+.lookup-table tbody tr:hover {
+  background: #30404a !important;
+}
+
+table td,
+table th,
+.data-table td,
+.data-table th,
+.lookup-table td,
+.lookup-table th {
+  border-color: #3a4650 !important;
+}
+
+table a,
+.data-table a,
+.lookup-table a,
+a {
+  color: var(--accent) !important;
+}
+
+table a:hover,
+.data-table a:hover,
+.lookup-table a:hover,
+a:hover {
+  color: var(--accent2) !important;
+}
+
+/* Status pills like MiddKIPS badges */
+.status-pill,
+.dns-pill,
+.badge,
+.pill {
+  border-radius: 4px !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  font-weight: 900 !important;
+}
+
+.status-pill.good,
+.dns-pill.good,
+.badge.good,
+.pill.good,
+.status-up,
+.up {
+  background: rgba(74, 194, 107, .18) !important;
+  border: 1px solid rgba(74, 194, 107, .65) !important;
+  color: #8ff0a4 !important;
+}
+
+.status-pill.bad,
+.dns-pill.bad,
+.badge.bad,
+.pill.bad,
+.status-down,
+.down {
+  background: rgba(214, 92, 92, .18) !important;
+  border: 1px solid rgba(214, 92, 92, .7) !important;
+  color: #ff9b9b !important;
+}
+
+.status-pill.warn,
+.dns-pill.warn,
+.badge.warn,
+.pill.warn {
+  background: rgba(214, 166, 66, .18) !important;
+  border: 1px solid rgba(214, 166, 66, .7) !important;
+  color: #ffd479 !important;
+}
+
+.status-pill.neutral,
+.dns-pill,
+.badge.neutral,
+.pill.neutral {
+  background: rgba(110, 215, 255, .10) !important;
+  border: 1px solid rgba(110, 215, 255, .35) !important;
+  color: #a7e9ff !important;
+}
+
+/* Forms */
+input,
+select,
+textarea,
+button {
+  background: #202930 !important;
+  color: #f2f7fb !important;
+  border: 1px solid #3a4650 !important;
+  box-shadow: none !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #6ed7ff !important;
+  outline: none !important;
+}
+
+/* DNS TV table stays readable but neutral */
+.dns-dashboard-page .dns-live-checks {
+  background: #252f36 !important;
+  border-color: #3a4650 !important;
+}
+
+.dns-dashboard-page .dns-live-checks table {
+  background: #202930 !important;
+}
+
+.dns-dashboard-page .dns-live-checks table td:nth-child(6) {
+  color: #ffffff !important;
+}
+
+.dns-dashboard-page .dns-live-checks table td:nth-child(8) {
+  color: #ffffff !important;
+}
+
+/* Make the app feel less neon overall */
+* {
+  scrollbar-color: #4a5660 #1a2228;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a2228;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4a5660;
+  border-radius: 8px;
+}
+
+/* FINAL route/theme cleanup */
+
+/* Brand must not inherit active nav white/black styling */
+.topbar .brand,
+.topbar a.brand,
+.site-header .brand,
+.app-header .brand,
+.brand,
+a.brand,
+.logo,
+.site-logo,
+.navbar-brand {
+  display: inline-flex !important;
+  align-items: center !important;
+  color: #ffffff !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  filter: none !important;
+  opacity: 1 !important;
+  mix-blend-mode: normal !important;
+  text-shadow: none !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+.topbar .brand:hover,
+.topbar a.brand:hover,
+.brand:hover,
+a.brand:hover {
+  color: #ffffff !important;
+  background: transparent !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+.topbar .brand *,
+.topbar a.brand *,
+.brand *,
+a.brand *,
+.logo *,
+.site-logo * {
+  color: #ffffff !important;
+  background: transparent !important;
+  border: 0 !important;
+  filter: none !important;
+  opacity: 1 !important;
+  mix-blend-mode: normal !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+/* If the logo text is split, keep the accent subtle blue instead of black/white */
+.topbar .brand strong,
+.brand strong,
+.logo strong {
+  color: #ffffff !important;
+}
+
+.topbar .brand span,
+.brand span,
+.logo span {
+  color: #8cccf2 !important;
+}
+
+/* Kill teal panels/placeholder accents */
+.lookup-section,
+.lookup-section *,
+.placeholder-card,
+.next-steps,
+.next-steps *,
+.empty-card {
+  border-color: #3b4650 !important;
+}
+
+.lookup-section::before,
+.lookup-section::after,
+.placeholder-card::before,
+.placeholder-card::after,
+.next-steps::before,
+.next-steps::after {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Hard neutralize every table-like component */
+table,
+.data-table,
+.lookup-table,
+.results-table,
+.netops-table,
+.netops-status-table,
+[class*="table"] table,
+[class*="table-wrap"] table {
+  background: #202930 !important;
+  color: #f2f7fb !important;
+  border-color: #3b4650 !important;
+  box-shadow: none !important;
+}
+
+table thead,
+table thead tr,
+table thead th,
+.data-table thead,
+.data-table thead tr,
+.data-table thead th,
+.lookup-table thead,
+.lookup-table thead tr,
+.lookup-table thead th,
+.results-table thead,
+.results-table thead tr,
+.results-table thead th,
+.netops-table thead,
+.netops-table thead tr,
+.netops-table thead th,
+.netops-status-table thead,
+.netops-status-table thead tr,
+.netops-status-table thead th {
+  background: #182025 !important;
+  color: #ffffff !important;
+  border-color: #3b4650 !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+table tbody tr,
+.data-table tbody tr,
+.lookup-table tbody tr,
+.results-table tbody tr,
+.netops-table tbody tr,
+.netops-status-table tbody tr {
+  background: #222c33 !important;
+  color: #f2f7fb !important;
+  border-color: #3b4650 !important;
+}
+
+table tbody tr:nth-child(even),
+.data-table tbody tr:nth-child(even),
+.lookup-table tbody tr:nth-child(even),
+.results-table tbody tr:nth-child(even),
+.netops-table tbody tr:nth-child(even),
+.netops-status-table tbody tr:nth-child(even) {
+  background: #253039 !important;
+}
+
+table tbody tr:hover,
+.data-table tbody tr:hover,
+.lookup-table tbody tr:hover,
+.results-table tbody tr:hover,
+.netops-table tbody tr:hover,
+.netops-status-table tbody tr:hover {
+  background: #303a43 !important;
+}
+
+table td,
+table th,
+.data-table td,
+.data-table th,
+.lookup-table td,
+.lookup-table th,
+.results-table td,
+.results-table th,
+.netops-table td,
+.netops-table th,
+.netops-status-table td,
+.netops-status-table th {
+  background-color: transparent !important;
+  color: #f2f7fb !important;
+  border-color: #3b4650 !important;
+  box-shadow: none !important;
+}
+
+/* Links should be MiddKIPS blue, not teal */
+table a,
+.data-table a,
+.lookup-table a,
+.results-table a,
+.netops-table a,
+.netops-status-table a {
+  color: #67b7e6 !important;
+  background: transparent !important;
+}
+
+table a:hover,
+.data-table a:hover,
+.lookup-table a:hover,
+.results-table a:hover,
+.netops-table a:hover,
+.netops-status-table a:hover {
+  color: #9ed7f4 !important;
+  background: transparent !important;
+}
+
+/* DNS dashboard table specifically */
+.dns-dashboard-page .dns-live-checks,
+.dns-dashboard-page .dns-live-checks table,
+.dns-dashboard-page .dns-live-checks tbody,
+.dns-dashboard-page .dns-live-checks tr,
+.dns-dashboard-page .dns-live-checks td,
+.dns-dashboard-page .dns-live-checks th {
+  border-color: #3b4650 !important;
+  box-shadow: none !important;
+}
+
+.dns-dashboard-page .dns-live-checks {
+  background: #252f36 !important;
+}
+
+.dns-dashboard-page .dns-live-checks table thead th {
+  background: #182025 !important;
+}
+
+.dns-dashboard-page .dns-live-checks table tbody tr {
+  background: #222c33 !important;
+}
+
+.dns-dashboard-page .dns-live-checks table tbody tr:nth-child(even) {
+  background: #253039 !important;
+}
+
+/* Remove teal left bars from list/placeholder sections */
+.next-steps li,
+.next-step,
+.placeholder-list li {
+  background: #222c33 !important;
+  border-color: #3b4650 !important;
+}
+
+.next-steps li::before,
+.next-step::before,
+.placeholder-list li::before {
+  background: #58aee6 !important;
+}
+
+/* FINAL route/theme cleanup */
+
+/* Brand must not inherit active nav white/black styling */
+.topbar .brand,
+.topbar a.brand,
+.site-header .brand,
+.app-header .brand,
+.brand,
+a.brand,
+.logo,
+.site-logo,
+.navbar-brand {
+  display: inline-flex !important;
+  align-items: center !important;
+  color: #ffffff !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  filter: none !important;
+  opacity: 1 !important;
+  mix-blend-mode: normal !important;
+  text-shadow: none !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+.topbar .brand:hover,
+.topbar a.brand:hover,
+.brand:hover,
+a.brand:hover {
+  color: #ffffff !important;
+  background: transparent !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+.topbar .brand *,
+.topbar a.brand *,
+.brand *,
+a.brand *,
+.logo *,
+.site-logo * {
+  color: #ffffff !important;
+  background: transparent !important;
+  border: 0 !important;
+  filter: none !important;
+  opacity: 1 !important;
+  mix-blend-mode: normal !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+/* If the logo text is split, keep the accent subtle blue instead of black/white */
+.topbar .brand strong,
+.brand strong,
+.logo strong {
+  color: #ffffff !important;
+}
+
+.topbar .brand span,
+.brand span,
+.logo span {
+  color: #8cccf2 !important;
+}
+
+/* Kill teal panels/placeholder accents */
+.lookup-section,
+.lookup-section *,
+.placeholder-card,
+.next-steps,
+.next-steps *,
+.empty-card {
+  border-color: #3b4650 !important;
+}
+
+.lookup-section::before,
+.lookup-section::after,
+.placeholder-card::before,
+.placeholder-card::after,
+.next-steps::before,
+.next-steps::after {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Hard neutralize every table-like component */
+table,
+.data-table,
+.lookup-table,
+.results-table,
+.netops-table,
+.netops-status-table,
+[class*="table"] table,
+[class*="table-wrap"] table {
+  background: #202930 !important;
+  color: #f2f7fb !important;
+  border-color: #3b4650 !important;
+  box-shadow: none !important;
+}
+
+table thead,
+table thead tr,
+table thead th,
+.data-table thead,
+.data-table thead tr,
+.data-table thead th,
+.lookup-table thead,
+.lookup-table thead tr,
+.lookup-table thead th,
+.results-table thead,
+.results-table thead tr,
+.results-table thead th,
+.netops-table thead,
+.netops-table thead tr,
+.netops-table thead th,
+.netops-status-table thead,
+.netops-status-table thead tr,
+.netops-status-table thead th {
+  background: #182025 !important;
+  color: #ffffff !important;
+  border-color: #3b4650 !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+table tbody tr,
+.data-table tbody tr,
+.lookup-table tbody tr,
+.results-table tbody tr,
+.netops-table tbody tr,
+.netops-status-table tbody tr {
+  background: #222c33 !important;
+  color: #f2f7fb !important;
+  border-color: #3b4650 !important;
+}
+
+table tbody tr:nth-child(even),
+.data-table tbody tr:nth-child(even),
+.lookup-table tbody tr:nth-child(even),
+.results-table tbody tr:nth-child(even),
+.netops-table tbody tr:nth-child(even),
+.netops-status-table tbody tr:nth-child(even) {
+  background: #253039 !important;
+}
+
+table tbody tr:hover,
+.data-table tbody tr:hover,
+.lookup-table tbody tr:hover,
+.results-table tbody tr:hover,
+.netops-table tbody tr:hover,
+.netops-status-table tbody tr:hover {
+  background: #303a43 !important;
+}
+
+table td,
+table th,
+.data-table td,
+.data-table th,
+.lookup-table td,
+.lookup-table th,
+.results-table td,
+.results-table th,
+.netops-table td,
+.netops-table th,
+.netops-status-table td,
+.netops-status-table th {
+  background-color: transparent !important;
+  color: #f2f7fb !important;
+  border-color: #3b4650 !important;
+  box-shadow: none !important;
+}
+
+/* Links should be MiddKIPS blue, not teal */
+table a,
+.data-table a,
+.lookup-table a,
+.results-table a,
+.netops-table a,
+.netops-status-table a {
+  color: #67b7e6 !important;
+  background: transparent !important;
+}
+
+table a:hover,
+.data-table a:hover,
+.lookup-table a:hover,
+.results-table a:hover,
+.netops-table a:hover,
+.netops-status-table a:hover {
+  color: #9ed7f4 !important;
+  background: transparent !important;
+}
+
+/* DNS dashboard table specifically */
+.dns-dashboard-page .dns-live-checks,
+.dns-dashboard-page .dns-live-checks table,
+.dns-dashboard-page .dns-live-checks tbody,
+.dns-dashboard-page .dns-live-checks tr,
+.dns-dashboard-page .dns-live-checks td,
+.dns-dashboard-page .dns-live-checks th {
+  border-color: #3b4650 !important;
+  box-shadow: none !important;
+}
+
+.dns-dashboard-page .dns-live-checks {
+  background: #252f36 !important;
+}
+
+.dns-dashboard-page .dns-live-checks table thead th {
+  background: #182025 !important;
+}
+
+.dns-dashboard-page .dns-live-checks table tbody tr {
+  background: #222c33 !important;
+}
+
+.dns-dashboard-page .dns-live-checks table tbody tr:nth-child(even) {
+  background: #253039 !important;
+}
+
+/* Remove teal left bars from list/placeholder sections */
+.next-steps li,
+.next-step,
+.placeholder-list li {
+  background: #222c33 !important;
+  border-color: #3b4650 !important;
+}
+
+.next-steps li::before,
+.next-step::before,
+.placeholder-list li::before {
+  background: #58aee6 !important;
+}
+
+/* DNS Domain Check page */
+.dns-domain-check-page {
+  padding-bottom: 40px;
+}
+
+.dns-domain-form {
+  display: grid;
+  grid-template-columns: 130px minmax(280px, 760px);
+  gap: 9px 14px;
+  align-items: center;
+  margin: 14px 0 14px 0;
+  max-width: 980px;
+}
+
+.dns-domain-form label {
+  display: contents;
+  color: #b8c9d4;
+  font-weight: 850;
+  font-size: .86rem;
+}
+
+.dns-domain-form input,
+.dns-domain-form select {
+  width: 100%;
+  background: #edf4f7 !important;
+  color: #102027 !important;
+  border: 1px solid #98aebc !important;
+  border-radius: 4px !important;
+  padding: 7px 9px !important;
+  font-weight: 800;
+}
+
+.dns-domain-form button {
+  grid-column: 2;
+  background: #0f5878 !important;
+  border: 1px solid #3d9ccc !important;
+  color: #ffffff !important;
+  border-radius: 5px !important;
+  padding: 8px 12px !important;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.dns-domain-form button:hover {
+  background: #176d91 !important;
+}
+
+.dns-domain-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 220px));
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.dns-check-section {
+  margin-top: 14px;
+}
+
+.dns-check-section h2 {
+  font-size: 1.05rem;
+}
+
+.dns-mini-metrics {
+  display: flex;
+  gap: 8px;
+  margin: 8px 0 8px 0;
+}
+
+.dns-mini-metrics span {
+  display: inline-block;
+  background: #1b2329;
+  border: 1px solid #3b4650;
+  border-radius: 4px;
+  color: #e8f2f7;
+  padding: 4px 7px;
+  font-size: .76rem;
+  font-weight: 900;
+}
+
+.dns-domain-table-wrap {
+  overflow-x: auto;
+  border: 1px solid #3b4650;
+  background: #202930;
+}
+
+.dns-domain-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #202930 !important;
+  color: #f2f7fb !important;
+  font-size: .9rem;
+}
+
+.dns-domain-table th {
+  background: #182025 !important;
+  color: #ffffff !important;
+  border: 1px solid #3b4650 !important;
+  padding: 8px 9px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.dns-domain-table td {
+  border: 1px solid #3b4650 !important;
+  padding: 7px 9px;
+  vertical-align: middle;
+}
+
+.dns-domain-table tbody tr {
+  background: #222c33 !important;
+}
+
+.dns-domain-table tbody tr:nth-child(even) {
+  background: #253039 !important;
+}
+
+.dns-domain-table tbody tr:hover {
+  background: #303a43 !important;
+}
+
+.dns-domain-table td:nth-child(1),
+.dns-domain-table td:nth-child(2),
+.dns-domain-table td:nth-child(4),
+.dns-domain-table td:nth-child(5),
+.dns-domain-table td:nth-child(6) {
+  white-space: nowrap;
+}
+
+.dns-domain-table td:nth-child(7) {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: .84rem;
+}
+
+.dns-domain-table .row-bad {
+  background: rgba(80, 40, 40, .55) !important;
+}
+
+@media (min-width: 1500px) {
+  .dns-domain-table {
+    font-size: .96rem;
+  }
+
+  .dns-domain-table th,
+  .dns-domain-table td {
+    padding: 8px 10px;
+  }
+}
+
+/* Read-only MiddKIPS device page */
+.midd-device-page {
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr);
+  gap: 10px;
+  padding: 10px;
+}
+
+.midd-device-selector {
+  background: #252d34;
+  border: 1px solid #39434d;
+  border-radius: 4px;
+  max-height: calc(100vh - 92px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.midd-device-selector .selector-head {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px;
+  border-bottom: 1px solid #39434d;
+  color: #edf2f6;
+}
+
+.device-filter {
+  margin: 7px;
+  width: calc(100% - 14px);
+  padding: 5px 7px !important;
+  font-size: .82rem;
+}
+
+.device-list {
+  overflow-y: auto;
+  padding: 6px;
+}
+
+.device-list a {
+  display: block;
+  color: #edf2f6 !important;
+  padding: 4px 6px;
+  border-radius: 3px;
+  font-size: .8rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.device-list a:hover {
+  background: #303a43 !important;
+}
+
+.device-list a.selected {
+  background: #2d6f91 !important;
+  color: #ffffff !important;
+}
+
+.midd-device-main {
+  min-width: 0;
+}
+
+.midd-device-main .panel {
+  background: #252d34 !important;
+  border: 1px solid #39434d !important;
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 10px;
+  box-shadow: none !important;
+}
+
+.midd-device-main .panel-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.midd-device-main .panel-head h1 {
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+.midd-device-main .actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.midd-device-main .button {
+  background: #20262c !important;
+  border: 1px solid #39434d !important;
+  border-radius: 4px;
+  color: #edf2f6 !important;
+  padding: 5px 9px;
+  text-decoration: none;
+  font-weight: 900;
+}
+
+.midd-device-main .button.disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+.midd-device-main .identity {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+}
+
+.midd-device-main .identity th,
+.midd-device-main .identity td,
+.midd-device-main table.report th,
+.midd-device-main table.report td {
+  border: 1px solid #39434d !important;
+  padding: 6px 8px;
+}
+
+.midd-device-main .identity th,
+.midd-device-main table.report th {
+  background: #20262c !important;
+  color: #ffffff !important;
+}
+
+.midd-device-main .identity td,
+.midd-device-main table.report td {
+  background: #252d34 !important;
+  color: #edf2f6 !important;
+}
+
+.midd-device-main table.report tr:nth-child(even) td {
+  background: #28323a !important;
+}
+
+.midd-device-main .cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+  gap: 8px;
+}
+
+.midd-device-main .card {
+  background: #20262c !important;
+  border: 1px solid #39434d !important;
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.midd-device-main .card span {
+  color: #a8b3bd;
+  display: block;
+  font-size: .78rem;
+}
+
+.midd-device-main .card strong {
+  color: #ffffff;
+  font-size: 1.45rem;
+}
+
+.akips-device-grid {
+  display: grid;
+  grid-template-columns: 280px 330px minmax(620px, 1fr);
+  gap: 10px;
+  align-items: start;
+}
+
+.akips-mini-stack,
+.akips-center-stack {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.akips-panel-title {
+  text-align: center;
+  font-weight: 800;
+  margin: 0 0 8px 0;
+  font-size: .98rem;
+}
+
+.akips-tabbar {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin: 0 0 8px 0;
+  flex-wrap: wrap;
+}
+
+.akips-tabbar a {
+  border: 1px solid #39434d;
+  border-radius: 4px;
+  padding: 5px 9px;
+  text-decoration: none;
+  color: #edf2f6 !important;
+  background: #20262c;
+  font-weight: 850;
+}
+
+.akips-availability {
+  display: grid;
+  grid-template-columns: 1fr 90px;
+  gap: 8px;
+  align-items: center;
+}
+
+.akips-bar {
+  height: 10px;
+  border: 1px solid #39434d;
+  background: linear-gradient(90deg, rgba(46,160,67,.7), rgba(46,160,67,.2));
+}
+
+.midd-device-main table.compact {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .84rem;
+}
+
+.status-pill.good,
+.status-pill.status-up {
+  background: rgba(74, 194, 107, .18) !important;
+  border: 1px solid rgba(74, 194, 107, .65) !important;
+  color: #8ff0a4 !important;
+}
+
+.status-pill.bad,
+.status-pill.status-down {
+  background: rgba(214, 92, 92, .18) !important;
+  border: 1px solid rgba(214, 92, 92, .7) !important;
+  color: #ff9b9b !important;
+}
+
+.status-pill.warn,
+.status-pill.neutral {
+  background: rgba(214, 166, 66, .18) !important;
+  border: 1px solid rgba(214, 166, 66, .7) !important;
+  color: #ffd479 !important;
+}
+
+@media (max-width: 1300px) {
+  .midd-device-page {
+    grid-template-columns: 1fr;
+  }
+
+  .midd-device-selector {
+    max-height: 280px;
+  }
+
+  .akips-device-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Device page overlap fix */
+.midd-device-page,
+.midd-device-main,
+.akips-device-grid,
+.akips-mini-stack,
+.akips-center-stack,
+.akips-device-grid > section,
+.midd-device-main .panel {
+  min-width: 0 !important;
+}
+
+.akips-device-grid {
+  grid-template-columns: minmax(250px, 300px) minmax(260px, 340px) minmax(0, 1fr) !important;
+  overflow: hidden !important;
+}
+
+/* Keep small left/center panels from bleeding into the next column */
+.akips-mini-stack .panel,
+.akips-center-stack .panel {
+  overflow: hidden !important;
+}
+
+/* Let content wrap inside small tables instead of overflowing */
+.akips-mini-stack table.report,
+.akips-center-stack table.report {
+  table-layout: fixed !important;
+  width: 100% !important;
+}
+
+.akips-mini-stack table.report th,
+.akips-mini-stack table.report td,
+.akips-center-stack table.report th,
+.akips-center-stack table.report td {
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+}
+
+/* Events small table */
+.akips-mini-stack .akips-events-box table.report th:nth-child(1),
+.akips-mini-stack .akips-events-box table.report td:nth-child(1) {
+  width: 46% !important;
+}
+
+.akips-mini-stack .akips-events-box table.report th:nth-child(2),
+.akips-mini-stack .akips-events-box table.report td:nth-child(2) {
+  width: 34% !important;
+}
+
+.akips-mini-stack .akips-events-box table.report th:nth-child(3),
+.akips-mini-stack .akips-events-box table.report td:nth-child(3) {
+  width: 20% !important;
+}
+
+/* Status Exceptions table */
+.akips-mini-stack table.report th:nth-child(1),
+.akips-mini-stack table.report td:nth-child(1) {
+  width: 32% !important;
+}
+
+.akips-mini-stack table.report th:nth-child(2),
+.akips-mini-stack table.report td:nth-child(2) {
+  width: 26% !important;
+}
+
+.akips-mini-stack table.report th:nth-child(3),
+.akips-mini-stack table.report td:nth-child(3) {
+  width: 42% !important;
+}
+
+/* Vitals table */
+.akips-center-stack table.report th:nth-child(1),
+.akips-center-stack table.report td:nth-child(1) {
+  width: 18% !important;
+}
+
+.akips-center-stack table.report th:nth-child(2),
+.akips-center-stack table.report td:nth-child(2) {
+  width: 18% !important;
+}
+
+.akips-center-stack table.report th:nth-child(3),
+.akips-center-stack table.report td:nth-child(3) {
+  width: 64% !important;
+}
+
+/* Main interface panel should stay inside its own column */
+.akips-device-grid > .panel:last-child {
+  overflow-x: auto !important;
+}
+
+.akips-device-grid > .panel:last-child table.report {
+  min-width: 900px !important;
+}
+
+/* Slightly tighten the device page so it feels more like MiddKIPS */
+.midd-device-page {
+  grid-template-columns: 215px minmax(0, 1fr) !important;
+  gap: 8px !important;
+}
+
+.midd-device-main .panel {
+  margin-bottom: 8px !important;
+}
+
+.midd-device-main .panel-head {
+  margin-bottom: 6px !important;
+}
+
+.midd-device-main table.report.compact {
+  font-size: .78rem !important;
+}
+
+.midd-device-main table.report th,
+.midd-device-main table.report td {
+  padding: 5px 6px !important;
+}
+
+@media (max-width: 1450px) {
+  .akips-device-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .akips-device-grid > .panel:last-child table.report {
+    min-width: 850px !important;
+  }
+}
+
+/* DNS External Zone Usage */
+.dns-usage-kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.dns-usage-filter {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) 120px 140px auto auto;
+  gap: 8px;
+  align-items: end;
+  margin: 12px 0;
+}
+
+.dns-usage-filter label {
+  display: grid;
+  gap: 4px;
+  color: #aab9c4;
+  font-weight: 850;
+  font-size: .82rem;
+}
+
+.dns-usage-filter input {
+  background: #edf4f7 !important;
+  color: #102027 !important;
+  border: 1px solid #98aebc !important;
+  border-radius: 4px !important;
+  padding: 7px 9px !important;
+  font-weight: 800;
+}
+
+.dns-usage-filter button,
+.dns-usage-filter .button {
+  background: #26323a !important;
+  border: 1px solid #4a5660 !important;
+  color: #eaf6fb !important;
+  border-radius: 4px;
+  padding: 7px 10px !important;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.dns-usage-note {
+  border: 1px solid #3b4650;
+  border-radius: 4px;
+  padding: 9px 10px;
+  margin: 10px 0;
+  background: #252f36;
+  color: #eaf6fb;
+}
+
+.dns-usage-note.warn {
+  border-color: rgba(214, 166, 66, .7);
+}
+
+.dns-usage-note.good {
+  border-color: rgba(74, 194, 107, .65);
+}
+
+.dns-usage-errors {
+  border: 1px solid rgba(214, 92, 92, .7);
+  background: rgba(214, 92, 92, .12);
+  color: #ffb3b3;
+  padding: 10px;
+  border-radius: 4px;
+  margin: 10px 0;
+}
+
+.dns-usage-table-wrap {
+  overflow-x: auto;
+  border: 1px solid #3b4650;
+}
+
+.dns-usage-table {
+  width: 100%;
+  min-width: 1500px;
+  border-collapse: collapse;
+  font-size: .82rem;
+}
+
+.dns-usage-table th {
+  background: #182025 !important;
+  color: #ffffff !important;
+  border: 1px solid #3b4650 !important;
+  padding: 7px 8px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.dns-usage-table td {
+  background: #222c33 !important;
+  border: 1px solid #3b4650 !important;
+  color: #f2f7fb !important;
+  padding: 6px 8px;
+  white-space: nowrap;
+}
+
+.dns-usage-table tr:nth-child(even) td {
+  background: #253039 !important;
+}
+
+.dns-usage-table .zone-name {
+  font-weight: 900;
+  color: #9ed7f4 !important;
+}
+
+.usage-pill {
+  display: inline-block;
+  border-radius: 4px;
+  padding: 3px 7px;
+  font-weight: 950;
+  background: #303a43;
+  border: 1px solid #4a5660;
+}
+
+.usage-status-parked-candidate .usage-pill,
+.usage-status-parkedmaybe .usage-pill {
+  background: rgba(214, 166, 66, .18);
+  border-color: rgba(214, 166, 66, .7);
+  color: #ffd479;
+}
+
+.usage-status-zero-hits .usage-pill,
+.usage-status-no-hit-data .usage-pill {
+  background: rgba(90, 120, 145, .24);
+  border-color: rgba(130, 160, 180, .45);
+  color: #d5e8f2;
+}
+
+.usage-status-active .usage-pill {
+  background: rgba(74, 194, 107, .18);
+  border-color: rgba(74, 194, 107, .65);
+  color: #8ff0a4;
+}
+
+@media (max-width: 1000px) {
+  .dns-usage-filter {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* DNS usage sortable columns */
+.dns-usage-sort-hint {
+  color: #aab9c4;
+  font-size: .84rem;
+  margin: 0 0 8px 0;
+}
+
+.dns-usage-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+}
+
+.dns-usage-table th.sortable:hover {
+  background: #24313a !important;
+}
+
+.dns-usage-table th.sort-asc::after {
+  content: " ▲";
+  color: #9ed7f4;
+}
+
+.dns-usage-table th.sort-desc::after {
+  content: " ▼";
+  color: #9ed7f4;
+}
+
+/* NTP TV dashboard */
+.tv-dashboard {
+  padding: 18px;
+}
+
+.tv-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  border: 1px solid #38434c;
+  background: #1f2830;
+  border-radius: 12px;
+  padding: 22px 24px;
+  margin-bottom: 18px;
+}
+
+.tv-hero.good {
+  border-color: #2e8b57;
+}
+
+.tv-hero.warn {
+  border-color: #b58b28;
+}
+
+.tv-hero.critical {
+  border-color: #a94442;
+}
+
+.tv-eyebrow {
+  color: #93a8b5;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  font-size: .78rem;
+  margin-bottom: 5px;
+}
+
+.tv-hero h1 {
+  margin: 0;
+  font-size: 2.3rem;
+  line-height: 1.1;
+}
+
+.tv-hero p {
+  margin: 7px 0 0 0;
+  color: #b8c8d2;
+  font-size: 1rem;
+}
+
+.tv-status-badge {
+  font-size: 2rem;
+  font-weight: 800;
+  border-radius: 12px;
+  padding: 16px 22px;
+  min-width: 180px;
+  text-align: center;
+}
+
+.tv-status-badge.good {
+  background: #163d2b;
+  color: #8ef0b0;
+}
+
+.tv-status-badge.warn {
+  background: #3b3016;
+  color: #ffd36a;
+}
+
+.tv-status-badge.critical {
+  background: #3d1d1d;
+  color: #ff9a9a;
+}
+
+.tv-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.tv-kpi {
+  background: #222c34;
+  border: 1px solid #38434c;
+  border-radius: 10px;
+  padding: 14px;
+}
+
+.tv-kpi span,
+.ntp-label {
+  display: block;
+  color: #9fb2bf;
+  font-size: .82rem;
+  margin-bottom: 5px;
+}
+
+.tv-kpi strong {
+  display: block;
+  font-size: 1.9rem;
+  line-height: 1;
+}
+
+.tv-kpi.good {
+  border-color: #2e8b57;
+}
+
+.tv-kpi.warn {
+  border-color: #b58b28;
+}
+
+.tv-kpi.critical {
+  border-color: #a94442;
+}
+
+.tv-kpi.neutral {
+  border-color: #4a5964;
+}
+
+.ntp-primary-card {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1.4fr;
+  gap: 14px;
+  background: #202a32;
+  border: 1px solid #38434c;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.ntp-primary-card.good {
+  border-color: #2e8b57;
+}
+
+.ntp-primary-card.warn {
+  border-color: #b58b28;
+}
+
+.ntp-primary-card.critical {
+  border-color: #a94442;
+}
+
+.ntp-primary-card strong {
+  display: block;
+  font-size: 1.25rem;
+}
+
+.ntp-primary-card small {
+  color: #9fb2bf;
+}
+
+.ntp-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));
+  gap: 14px;
+}
+
+.ntp-check-card {
+  background: #202a32;
+  border: 1px solid #38434c;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.ntp-check-card.good {
+  border-color: #2e8b57;
+}
+
+.ntp-check-card.warn {
+  border-color: #b58b28;
+}
+
+.ntp-check-card.critical {
+  border-color: #a94442;
+}
+
+.ntp-card-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+
+.ntp-card-head h2 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.ntp-card-head p {
+  margin: 4px 0 0 0;
+  color: #9fb2bf;
+}
+
+.ntp-pill {
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-weight: 800;
+  font-size: .85rem;
+}
+
+.ntp-pill.good {
+  background: #163d2b;
+  color: #8ef0b0;
+}
+
+.ntp-pill.warn {
+  background: #3b3016;
+  color: #ffd36a;
+}
+
+.ntp-pill.critical {
+  background: #3d1d1d;
+  color: #ff9a9a;
+}
+
+.ntp-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.ntp-metrics div {
+  background: #182128;
+  border: 1px solid #303b44;
+  border-radius: 9px;
+  padding: 10px;
+}
+
+.ntp-metrics span,
+.ntp-details span {
+  display: block;
+  color: #9fb2bf;
+  font-size: .78rem;
+}
+
+.ntp-metrics strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 1.1rem;
+}
+
+.ntp-details {
+  display: grid;
+  gap: 8px;
+}
+
+.ntp-details div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  border-top: 1px solid #303b44;
+  padding-top: 8px;
+}
+
+.ntp-details strong {
+  text-align: right;
+}
+
+.ntp-error strong {
+  color: #ff9a9a;
+}
+
+@media (max-width: 1000px) {
+  .tv-kpi-grid,
+  .ntp-primary-card {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ntp-card-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* NTP TV dashboard */
+.tv-dashboard {
+  padding: 18px;
+}
+
+.tv-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  border: 1px solid #38434c;
+  background: #1f2830;
+  border-radius: 12px;
+  padding: 22px 24px;
+  margin-bottom: 18px;
+}
+
+.tv-hero.good {
+  border-color: #2e8b57;
+}
+
+.tv-hero.warn {
+  border-color: #b58b28;
+}
+
+.tv-hero.critical {
+  border-color: #a94442;
+}
+
+.tv-eyebrow {
+  color: #93a8b5;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  font-size: .78rem;
+  margin-bottom: 5px;
+}
+
+.tv-hero h1 {
+  margin: 0;
+  font-size: 2.3rem;
+  line-height: 1.1;
+}
+
+.tv-hero p {
+  margin: 7px 0 0 0;
+  color: #b8c8d2;
+  font-size: 1rem;
+}
+
+.tv-status-badge {
+  font-size: 2rem;
+  font-weight: 800;
+  border-radius: 12px;
+  padding: 16px 22px;
+  min-width: 180px;
+  text-align: center;
+}
+
+.tv-status-badge.good {
+  background: #163d2b;
+  color: #8ef0b0;
+}
+
+.tv-status-badge.warn {
+  background: #3b3016;
+  color: #ffd36a;
+}
+
+.tv-status-badge.critical {
+  background: #3d1d1d;
+  color: #ff9a9a;
+}
+
+.tv-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.tv-kpi {
+  background: #222c34;
+  border: 1px solid #38434c;
+  border-radius: 10px;
+  padding: 14px;
+}
+
+.tv-kpi span,
+.ntp-label {
+  display: block;
+  color: #9fb2bf;
+  font-size: .82rem;
+  margin-bottom: 5px;
+}
+
+.tv-kpi strong {
+  display: block;
+  font-size: 1.9rem;
+  line-height: 1;
+}
+
+.tv-kpi.good {
+  border-color: #2e8b57;
+}
+
+.tv-kpi.warn {
+  border-color: #b58b28;
+}
+
+.tv-kpi.critical {
+  border-color: #a94442;
+}
+
+.tv-kpi.neutral {
+  border-color: #4a5964;
+}
+
+.ntp-primary-card {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1.4fr;
+  gap: 14px;
+  background: #202a32;
+  border: 1px solid #38434c;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.ntp-primary-card.good {
+  border-color: #2e8b57;
+}
+
+.ntp-primary-card.warn {
+  border-color: #b58b28;
+}
+
+.ntp-primary-card.critical {
+  border-color: #a94442;
+}
+
+.ntp-primary-card strong {
+  display: block;
+  font-size: 1.25rem;
+}
+
+.ntp-primary-card small {
+  color: #9fb2bf;
+}
+
+.ntp-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));
+  gap: 14px;
+}
+
+.ntp-check-card {
+  background: #202a32;
+  border: 1px solid #38434c;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.ntp-check-card.good {
+  border-color: #2e8b57;
+}
+
+.ntp-check-card.warn {
+  border-color: #b58b28;
+}
+
+.ntp-check-card.critical {
+  border-color: #a94442;
+}
+
+.ntp-card-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+
+.ntp-card-head h2 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.ntp-card-head p {
+  margin: 4px 0 0 0;
+  color: #9fb2bf;
+}
+
+.ntp-pill {
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-weight: 800;
+  font-size: .85rem;
+}
+
+.ntp-pill.good {
+  background: #163d2b;
+  color: #8ef0b0;
+}
+
+.ntp-pill.warn {
+  background: #3b3016;
+  color: #ffd36a;
+}
+
+.ntp-pill.critical {
+  background: #3d1d1d;
+  color: #ff9a9a;
+}
+
+.ntp-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.ntp-metrics div {
+  background: #182128;
+  border: 1px solid #303b44;
+  border-radius: 9px;
+  padding: 10px;
+}
+
+.ntp-metrics span,
+.ntp-details span {
+  display: block;
+  color: #9fb2bf;
+  font-size: .78rem;
+}
+
+.ntp-metrics strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 1.1rem;
+}
+
+.ntp-details {
+  display: grid;
+  gap: 8px;
+}
+
+.ntp-details div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  border-top: 1px solid #303b44;
+  padding-top: 8px;
+}
+
+.ntp-details strong {
+  text-align: right;
+}
+
+.ntp-error strong {
+  color: #ff9a9a;
+}
+
+@media (max-width: 1000px) {
+  .tv-kpi-grid,
+  .ntp-primary-card {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ntp-card-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Time + DNS dashboard */
+.time-dns-kpis {
+  grid-template-columns: repeat(6, minmax(140px, 1fr));
+}
+
+.dashboard-section-title {
+  margin: 22px 0 12px 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: end;
+}
+
+.dashboard-section-title h2 {
+  margin: 0;
+  font-size: 1.55rem;
+}
+
+.dashboard-section-title p {
+  margin: 0;
+  color: #9fb2bf;
+}
+
+.dns-check-table-wrap {
+  background: #202a32;
+  border: 1px solid #38434c;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.dns-check-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.dns-check-table th,
+.dns-check-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #303b44;
+  vertical-align: top;
+  text-align: left;
+}
+
+.dns-check-table th {
+  color: #9fb2bf;
+  font-size: .78rem;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  background: #182128;
+}
+
+.dns-check-table td strong {
+  display: block;
+}
+
+.dns-check-table td small {
+  display: block;
+  color: #9fb2bf;
+  margin-top: 3px;
+}
+
+.dns-check-table tr.good {
+  border-left: 4px solid #2e8b57;
+}
+
+.dns-check-table tr.warn {
+  border-left: 4px solid #b58b28;
+}
+
+.dns-check-table tr.critical {
+  border-left: 4px solid #a94442;
+}
+
+.ntp-error-text {
+  color: #ff9a9a !important;
+}
+
+@media (max-width: 1200px) {
+  .time-dns-kpis {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .dashboard-section-title {
+    display: block;
+  }
+
+  .dashboard-section-title p {
+    margin-top: 5px;
+  }
+}
