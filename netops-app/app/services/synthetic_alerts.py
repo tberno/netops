@@ -205,26 +205,62 @@ def process_events(
     return sent
 
 
+def env_bool(name: str, default: bool) -> bool:
+    raw = os.getenv(name, "").strip().lower()
+    if not raw:
+        return default
+    return raw in ("1", "true", "yes", "on")
+
+
 def ntp_events() -> list[CheckEvent]:
     hosts = set(env_list("NETOPS_ALERT_NTP_HOSTS", DEFAULT_NTP_HOSTS))
+
+    # Absolute offset compares each NTP server to raccoon's local clock.
+    # This is disabled by default because a raccoon clock issue can make every
+    # healthy NTP server look bad at the same time.
+    check_absolute_offset = env_bool("NETOPS_ALERT_NTP_CHECK_ABSOLUTE_OFFSET", False)
     warn_ms = env_float("NETOPS_ALERT_NTP_WARN_MS", 100.0)
     crit_ms = env_float("NETOPS_ALERT_NTP_CRIT_MS", 500.0)
+
+    # Relative spread compares the monitored NTP servers to each other.
+    # This catches one bad NTP server without requiring raccoon to be a trusted clock.
+    spread_warn_ms = env_float("NETOPS_ALERT_NTP_SPREAD_WARN_MS", 250.0)
+    spread_crit_ms = env_float("NETOPS_ALERT_NTP_SPREAD_CRIT_MS", 1000.0)
+
     link = os.getenv("NETOPS_ALERT_NTP_DASHBOARD_URL", DEFAULT_DASHBOARD_URL)
 
     ctx = ntp_dashboard_context()
     checks = ctx.get("checks", [])
 
-    events: list[CheckEvent] = []
-
+    selected: list[dict[str, Any]] = []
     found_hosts = set()
 
     for check in checks:
         host = str(check.get("host") or "")
         if host not in hosts:
             continue
-
         found_hosts.add(host)
+        selected.append(check)
 
+    offset_values = [
+        float(c["offset_ms"])
+        for c in selected
+        if c.get("offset_ms") is not None and c.get("ok")
+    ]
+
+    median_offset = None
+    if offset_values:
+        sorted_offsets = sorted(offset_values)
+        mid = len(sorted_offsets) // 2
+        if len(sorted_offsets) % 2:
+            median_offset = sorted_offsets[mid]
+        else:
+            median_offset = (sorted_offsets[mid - 1] + sorted_offsets[mid]) / 2.0
+
+    events: list[CheckEvent] = []
+
+    for check in selected:
+        host = str(check.get("host") or "")
         offset = check.get("offset_ms")
         state = str(check.get("state") or "").lower()
         status = str(check.get("status") or "").upper()
@@ -233,34 +269,56 @@ def ntp_events() -> list[CheckEvent]:
         resolved_ip = check.get("resolved_ip") or "unresolved"
 
         bad_reasons = []
+        severity = "ok"
 
         if not check.get("ok"):
             bad_reasons.append("NTP query failed")
+            severity = "critical"
 
         if error:
             bad_reasons.append(f"error={error}")
+            severity = "critical"
 
         if stratum is None:
             bad_reasons.append("stratum is missing")
+            severity = "critical"
         elif int(stratum) >= 16:
             bad_reasons.append(f"stratum={stratum}")
+            severity = "critical"
 
-        severity = "ok"
-
-        if offset is not None:
+        if check_absolute_offset and offset is not None:
             abs_offset = abs(float(offset))
             if abs_offset > crit_ms:
-                bad_reasons.append(f"offset {offset:.2f} ms exceeds critical {crit_ms:.0f} ms")
+                bad_reasons.append(f"absolute offset {offset:.2f} ms exceeds critical {crit_ms:.0f} ms")
                 severity = "critical"
-            elif abs_offset > warn_ms:
-                bad_reasons.append(f"offset {offset:.2f} ms exceeds warning {warn_ms:.0f} ms")
+            elif abs_offset > warn_ms and severity != "critical":
+                bad_reasons.append(f"absolute offset {offset:.2f} ms exceeds warning {warn_ms:.0f} ms")
                 severity = "warning"
 
-        if state == "critical" or status == "CRITICAL" or not check.get("ok"):
-            severity = "critical"
-        elif state == "warn" or status == "WARN":
-            if severity != "critical":
+        relative_delta = None
+        if median_offset is not None and offset is not None:
+            relative_delta = float(offset) - median_offset
+            abs_delta = abs(relative_delta)
+
+            if abs_delta > spread_crit_ms:
+                bad_reasons.append(
+                    f"relative NTP offset delta {relative_delta:.2f} ms exceeds critical spread {spread_crit_ms:.0f} ms"
+                )
+                severity = "critical"
+            elif abs_delta > spread_warn_ms and severity != "critical":
+                bad_reasons.append(
+                    f"relative NTP offset delta {relative_delta:.2f} ms exceeds warning spread {spread_warn_ms:.0f} ms"
+                )
                 severity = "warning"
+
+        # Do not let dashboard WARN/CRITICAL caused only by absolute raccoon offset
+        # trigger Slack when absolute offset alerting is disabled.
+        if check_absolute_offset:
+            if state == "critical" or status == "CRITICAL":
+                severity = "critical"
+            elif state == "warn" or status == "WARN":
+                if severity != "critical":
+                    severity = "warning"
 
         ok = severity == "ok" and not bad_reasons
 
@@ -269,13 +327,16 @@ def ntp_events() -> list[CheckEvent]:
                 f"Host: {host}",
                 f"Resolved IP: {resolved_ip}",
                 f"Status: {status or state or 'unknown'}",
-                f"Offset: {offset if offset is not None else 'unknown'} ms",
+                f"Offset vs raccoon: {offset if offset is not None else 'unknown'} ms",
+                f"Median offset across monitored NTP servers: {median_offset if median_offset is not None else 'unknown'} ms",
+                f"Relative delta: {relative_delta if relative_delta is not None else 'unknown'} ms",
+                f"Absolute offset alerting enabled: {check_absolute_offset}",
                 f"Stratum: {stratum if stratum is not None else 'unknown'}",
                 f"Server time: {check.get('server_time_text') or 'unknown'}",
                 f"Checked: {check.get('checked_at') or utc_now()}",
                 "",
                 "Reason:",
-                "\n".join(f"- {r}" for r in bad_reasons) if bad_reasons else "- NTP healthy",
+                "\n".join(f"- {r}" for r in bad_reasons) if bad_reasons else "- NTP service healthy",
             ]
         )
 
@@ -307,7 +368,6 @@ def ntp_events() -> list[CheckEvent]:
         )
 
     return events
-
 
 def dig_soa_serial(server: str, zone: str) -> tuple[int | None, str]:
     cmd = [
