@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="lookup-page dns-usage-page">
+  <header class="lookup-head dashboard-head">
+    <div>
+      <h1>DNS External Zone Usage</h1>
+      <div class="meta">SOLIDserver External view zone inventory with record counts. Hit-count columns are staged for Graylog query data.</div>
+    </div>
+  </header>
+
+  <section class="dns-usage-kpis">
+    <div class="dns-kpi neutral"><strong>{{ summary.zones }}</strong><span>Shown Zones</span></div>
+    <div class="dns-kpi neutral"><strong>{{ summary.external_zones_total }}</strong><span>Unique External Zones</span></div>
+    <div class="dns-kpi neutral"><strong>{{ summary.records }}</strong><span>Unique Records</span></div>
+    <div class="dns-kpi neutral"><strong>{{ summary.zone_rows_collapsed }}</strong><span>Zone Rows Collapsed</span></div>
+    <div class="dns-kpi warn"><strong>{{ summary.parked }}</strong><span>Parked Candidates</span></div>
+    <div class="dns-kpi warn"><strong>{{ summary.zero_hits }}</strong><span>Zero Hits</span></div>
+    <div class="dns-kpi neutral"><strong>{{ summary.low }}</strong><span>Low Activity</span></div>
+    <div class="dns-kpi neutral"><strong>{{ summary.active }}</strong><span>Active</span></div>
+    <div class="dns-kpi neutral"><strong>{{ summary.with_mx }}</strong><span>Zones with MX</span></div>
+  </section>
+
+  <form method="get" class="dns-usage-filter">
+    <label>
+      Filter
+      <input name="q" value="{{ q }}" placeholder="zone, status, note">
+    </label>
+    <label>
+      Zone limit
+      <input name="limit_zones" value="{{ limit_zones }}">
+    </label>
+    <label>
+      RR limit
+      <input name="limit_rr" value="{{ limit_rr }}">
+    </label>
+    <button type="submit">Refresh</button>
+    <a class="button" href="{{ request.state.app_prefix }}/tools/dns-usage.csv?q={{ q }}&limit_zones={{ limit_zones }}&limit_rr={{ limit_rr }}">Download CSV</a>
+    <a class="button" href="{{ request.state.app_prefix }}/tools/dns-usage">Clear</a>
+  </form>
+
+  <div class="dns-usage-note {% if summary.graylog_auth %}good{% else %}warn{% endif %}">
+    Smart source: {{ summary.smart_name }}. Hidden reverse zones: {{ summary.reverse_hidden }}. Collapsed {{ summary.zone_rows_collapsed }} duplicate zone rows and {{ summary.rr_rows_collapsed }} duplicate RR rows from SOLIDserver server-specific results.
+    <br>
+    {{ hit_note }}
+  </div>
+
+  {% if errors %}
+    <section class="dns-usage-errors">
+      {% for err in errors %}
+        <div>{{ err }}</div>
+      {% endfor %}
+    </section>
+  {% endif %}
+
+  <section class="lookup-section dns-usage-table-section">
+    <h2>External Zones</h2>
+    <div class="dns-usage-sort-hint">Click any column header to sort. Real hit counts exclude DS/DNSKEY/SOA/NS noise and are from Graylog/BIND External-view logs, not Cloudflare DNS Analytics.</div>
+    <div class="dns-usage-table-wrap">
+      <table class="dns-usage-table" id="dnsUsageTable">
+        <thead>
+          <tr>
+            <th>Zone</th>
+            <th>Records</th>
+            <th>A</th>
+            <th>AAAA</th>
+            <th>CNAME</th>
+            <th>MX</th>
+            <th>TXT</th>
+            <th>NS</th>
+            <th>PTR</th>
+            <th>Real Hits 24h</th>
+            <th>Real Hits 7d</th>
+            <th>Real Hits 30d</th>
+            <th>Noise 30d</th>
+            <th>Last Seen</th>
+            <th>Top Query</th>
+            <th>Top Type</th>
+            <th>Status</th>
+            <th>Note</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in rows %}
+            <tr class="usage-status-{{ row.status|lower|replace(' ', '-')|replace('?', 'maybe') }}">
+              <td class="zone-name">{{ row.zone }}</td>
+              <td>{{ row.records }}</td>
+              <td>{{ row.a }}</td>
+              <td>{{ row.aaaa }}</td>
+              <td>{{ row.cname }}</td>
+              <td>{{ row.mx }}</td>
+              <td>{{ row.txt }}</td>
+              <td>{{ row.ns }}</td>
+              <td>{{ row.ptr }}</td>
+              <td>{{ row.hits_24h if row.hits_24h is not none else "—" }}</td>
+              <td>{{ row.hits_7d if row.hits_7d is not none else "—" }}</td>
+              <td>{{ row.hits_30d if row.hits_30d is not none else "—" }}</td>
+              <td>{{ row.noise_30d if row.noise_30d is not none else "—" }}</td>
+              <td>{{ row.last_seen }}</td>
+              <td>{{ row.top_query }}</td>
+              <td>{{ row.top_type }}</td>
+              <td><span class="usage-pill">{{ row.status }}</span></td>
+              <td>{{ row.note }}</td>
+            </tr>
+          {% else %}
+            <tr><td colspan="18" class="muted">No zones found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</section>
+
+<script>
+(function () {
+  const table = document.getElementById("dnsUsageTable");
+  if (!table) return;
+
+  const headers = Array.from(table.querySelectorAll("thead th"));
+  const tbody = table.querySelector("tbody");
+  let lastIndex = -1;
+  let lastDir = 1;
+
+  function cellText(row, index) {
+    const cell = row.children[index];
+    return cell ? cell.textContent.trim() : "";
+  }
+
+  function asNumber(value) {
+    const cleaned = value.replace(/,/g, "").replace(/—/g, "").trim();
+    if (cleaned === "") return null;
+    const n = Number(cleaned);
+    return Number.isFinite(n) ? n : null;
+  }
+
+  function sortDnsUsageTable(index) {
+    const rows = Array.from(tbody.querySelectorAll("tr"));
+    const dir = (lastIndex === index) ? -lastDir : 1;
+    lastIndex = index;
+    lastDir = dir;
+
+    headers.forEach(h => h.classList.remove("sort-asc", "sort-desc"));
+    headers[index].classList.add(dir === 1 ? "sort-asc" : "sort-desc");
+
+    rows.sort((a, b) => {
+      const av = cellText(a, index);
+      const bv = cellText(b, index);
+
+      const an = asNumber(av);
+      const bn = asNumber(bv);
+
+      if (an !== null && bn !== null) {
+        return (an - bn) * dir;
+      }
+
+      return av.localeCompare(bv, undefined, {numeric: true, sensitivity: "base"}) * dir;
+    });
+
+    rows.forEach(row => tbody.appendChild(row));
+  }
+
+  headers.forEach((th, index) => {
+    th.classList.add("sortable");
+    th.title = "Click to sort";
+    th.addEventListener("click", () => sortDnsUsageTable(index));
+  });
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="midd-device-page">
+  <aside class="midd-device-selector">
+    <div class="selector-head">
+      <strong>Switches</strong>
+      <span>{{ devices|length }}</span>
+    </div>
+    <input id="deviceFilter" class="device-filter" placeholder="filter switches">
+
+    <div class="device-list" id="deviceList">
+      {% for d in devices %}
+        <a class="{% if d.device_id == device_id %}selected{% endif %}" href="{{ request.state.app_prefix }}/tools/device/{{ d.device_id }}">
+          {{ d.device or d.hostname or d.sysName or d.ip_addr }}
+        </a>
+      {% endfor %}
+    </div>
+  </aside>
+
+  <main class="midd-device-main">
+    <section class="panel device-identity-panel">
+      <div class="panel-head">
+        <h1>{{ display_name }}</h1>
+        <div class="actions">
+          <a class="button" href="{{ librenms_url }}" target="_blank">LibreNMS</a>
+          <a class="button disabled" href="#">Download Config</a>
+          <a class="button disabled" href="#">Ping</a>
+          <a class="button disabled" href="#">SNMP Walk</a>
+        </div>
+      </div>
+
+      <table class="identity">
+        <tr>
+          <th>Device</th>
+          <th>IPv4</th>
+          <th>Uptime</th>
+          <th>Location ID</th>
+          <th>Identifier</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>{{ display_name }}</td>
+          <td>{{ ip_addr }}</td>
+          <td>{{ device.uptime }}</td>
+          <td>{{ device.location }}</td>
+          <td>{{ device.hardware }}</td>
+          <td>{{ device.os }} {{ device.version }}</td>
+        </tr>
+      </table>
+
+      <section class="cards">
+        <div class="card"><span>Interfaces</span><strong>{{ summary.interfaces }}</strong></div>
+        <div class="card"><span>Up</span><strong>{{ summary.up }}</strong></div>
+        <div class="card"><span>Down</span><strong>{{ summary.down }}</strong></div>
+        <div class="card"><span>Admin Down</span><strong>{{ summary.admin_down }}</strong></div>
+      </section>
+    </section>
+
+    <section class="akips-device-grid">
+      <section class="akips-mini-stack">
+        <section class="panel akips-events-box">
+          <h2 class="akips-panel-title">Events</h2>
+          <table class="report compact">
+            <thead>
+              <tr><th>Date/Time</th><th>Type</th><th>Severity</th></tr>
+            </thead>
+            <tbody>
+              {% for row in events[:5] %}
+                <tr><td>{{ row.datetime }}</td><td>{{ row.type }}</td><td>{{ row.severity }}</td></tr>
+              {% else %}
+                <tr><td colspan="3" class="muted">No events.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </section>
+
+        <section class="panel">
+          <h2 class="akips-panel-title">Status Exceptions</h2>
+          <table class="report compact">
+            <thead>
+              <tr><th>Interface</th><th>Problem</th><th>Title</th></tr>
+            </thead>
+            <tbody>
+              {% for row in problem_ports %}
+                <tr>
+                  <td>
+                    {% if row.port_id %}
+                      <a href="{{ request.state.app_prefix }}/interface/{{ row.port_id }}">{{ row.interface }}</a>
+                    {% else %}
+                      {{ row.interface }}
+                    {% endif %}
+                  </td>
+                  <td><span class="status-pill {{ row.status_class }}">{{ row.status }}</span></td>
+                  <td>{{ row.title }}</td>
+                </tr>
+              {% else %}
+                <tr><td colspan="3" class="muted">No status exceptions.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </section>
+      </section>
+
+      <section class="akips-center-stack">
+        <section class="panel">
+          <h2 class="akips-panel-title">Availability</h2>
+          <div class="akips-availability">
+            <div>Ping / SNMP</div>
+            <div class="akips-bar"></div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2 class="akips-panel-title">Vitals</h2>
+          <table class="report compact">
+            <thead>
+              <tr><th>Type</th><th>Value</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              {% for row in vitals %}
+                <tr><td>{{ row.type }}</td><td>{{ row.value }}</td><td>{{ row.descr }}</td></tr>
+              {% else %}
+                <tr><td colspan="3" class="muted">No vitals.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </section>
+      </section>
+
+      <section class="panel">
+        <h2 class="akips-panel-title">{{ summary.interfaces }} Interfaces: {{ summary.up }} up, {{ summary.down }} down</h2>
+        <div class="akips-tabbar">
+          <a href="{{ request.state.app_prefix }}/reports/interface-configuration?device_ids={{ device_id }}">Config</a>
+          <a href="{{ request.state.app_prefix }}/reports/interface-statistics?device_ids={{ device_id }}">Statistics</a>
+          <a href="{{ request.state.app_prefix }}/reports/mac-table?device_ids={{ device_id }}">MAC Table</a>
+          <a href="{{ request.state.app_prefix }}/reports/events?device_ids={{ device_id }}">Events</a>
+        </div>
+
+        <table class="report compact">
+          <thead>
+            <tr>
+              <th>Interface</th>
+              <th>Status</th>
+              <th>Speed</th>
+              <th>In</th>
+              <th>Out</th>
+              <th>Errors</th>
+              <th>MACs</th>
+              <th>Title</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in busy_ports %}
+              <tr>
+                <td>
+                  {% if row.port_id %}
+                    <a href="{{ request.state.app_prefix }}/interface/{{ row.port_id }}">{{ row.interface }}</a>
+                  {% else %}
+                    {{ row.interface }}
+                  {% endif %}
+                </td>
+                <td><span class="status-pill {{ row.status_class }}">{{ row.status }}</span></td>
+                <td>{{ row.speed }}</td>
+                <td>{{ row.in }}</td>
+                <td>{{ row.out }}</td>
+                <td>{{ row.errors }}</td>
+                <td>{{ row.mac_count }}</td>
+                <td>{{ row.title }}</td>
+              </tr>
+            {% else %}
+              <tr><td colspan="8" class="muted">No interface data.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
+    </section>
+
+    <section class="panel">
+      <h2 class="center">Eventlog</h2>
+      <table class="report compact">
+        <thead>
+          <tr><th>Date/Time</th><th>Type</th><th>Severity</th><th>Message</th></tr>
+        </thead>
+        <tbody>
+          {% for row in events %}
+            <tr><td>{{ row.datetime }}</td><td>{{ row.type }}</td><td>{{ row.severity }}</td><td>{{ row.message }}</td></tr>
+          {% else %}
+            <tr><td colspan="4" class="muted">No eventlog entries.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+  </main>
+</section>
+
+<script>
+(function () {
+  const input = document.getElementById("deviceFilter");
+  const list = document.getElementById("deviceList");
+  if (!input || !list) return;
+
+  input.addEventListener("input", function () {
+    const q = input.value.toLowerCase();
+    list.querySelectorAll("a").forEach(function (a) {
+      a.style.display = a.textContent.toLowerCase().includes(q) ? "" : "none";
+    });
+  });
+})();
+</script>
+{% endblock %}

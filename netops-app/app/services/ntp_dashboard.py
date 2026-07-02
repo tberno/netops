@@ -12,11 +12,22 @@ DEFAULT_TARGETS = [
     "time.middlebury.edu",
     "zeus.middlebury.edu",
     "hera.middlebury.edu",
+    "miis-infoblox1.middlebury.edu",
+    "miis-infoblox2.middlebury.edu",
     "time.cloudflare.com",
     "time.google.com",
     "time.aws.com",
     "time.nist.gov",
 ]
+
+
+MIDDLEBURY_TARGETS = {
+    "time.middlebury.edu",
+    "zeus.middlebury.edu",
+    "hera.middlebury.edu",
+    "miis-infoblox1.middlebury.edu",
+    "miis-infoblox2.middlebury.edu",
+}
 
 
 def _split_targets() -> list[str]:
@@ -28,7 +39,7 @@ def _split_targets() -> list[str]:
 
 def _role_for_host(host: str) -> str:
     h = host.lower()
-    if h in ("time.middlebury.edu", "zeus.middlebury.edu", "hera.middlebury.edu"):
+    if h in MIDDLEBURY_TARGETS:
         return "middlebury"
     return "reference"
 
@@ -97,7 +108,7 @@ def _ntp_query(host: str, timeout: float = 2.5) -> dict[str, Any]:
         return result
 
     packet = bytearray(48)
-    packet[0] = 0x23  # LI=0, version=4, mode=3 client
+    packet[0] = 0x23
 
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
@@ -166,8 +177,14 @@ def ntp_dashboard_context() -> dict[str, Any]:
     targets = _split_targets()
     checks = [_ntp_query(t) for t in targets]
 
-    monitored = [c for c in checks if c["role"] == "middlebury"]
+    service_checks = [c for c in checks if c["host"] == "time.middlebury.edu"]
+    appliance_checks = [
+        c for c in checks
+        if c["role"] == "middlebury" and c["host"] != "time.middlebury.edu"
+    ]
     references = [c for c in checks if c["role"] == "reference"]
+
+    monitored = service_checks + appliance_checks
 
     service_good = sum(1 for c in monitored if c["state"] == "good")
     service_warn = sum(1 for c in monitored if c["state"] == "warn")
@@ -177,7 +194,7 @@ def ntp_dashboard_context() -> dict[str, Any]:
     ref_warn = sum(1 for c in references if c["state"] == "warn")
     ref_critical = sum(1 for c in references if c["state"] == "critical")
 
-    primary = checks[0] if checks else None
+    primary = service_checks[0] if service_checks else checks[0] if checks else None
 
     if service_critical:
         overall_state = "critical"
@@ -192,6 +209,8 @@ def ntp_dashboard_context() -> dict[str, Any]:
     return {
         "title": "NTP Status",
         "checks": checks,
+        "service_checks": service_checks,
+        "appliance_checks": appliance_checks,
         "monitored_checks": monitored,
         "reference_checks": references,
         "primary": primary,

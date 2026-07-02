@@ -22,6 +22,8 @@ DEFAULT_NTP_TARGETS = [
     "time.middlebury.edu",
     "zeus.middlebury.edu",
     "hera.middlebury.edu",
+    "miis-infoblox1.middlebury.edu",
+    "miis-infoblox2.middlebury.edu",
     "time.cloudflare.com",
     "time.google.com",
     "time.aws.com",
@@ -32,8 +34,6 @@ DEFAULT_DNS_QUERIES = [
     "time.middlebury.edu",
     "zeus.middlebury.edu",
     "hera.middlebury.edu",
-    "miis-infoblox1.middlebury.edu",
-    "miis-infoblox2.middlebury.edu",
     "www.middlebury.edu",
 ]
 

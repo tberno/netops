@@ -1,0 +1,36 @@
+<article class="ntp-check-card {{ check.state }}">
+  <div class="ntp-card-head">
+    <div>
+      <h2>{{ check.host }}</h2>
+      <p>{{ check.role_label }} · {{ check.resolved_ip or "DNS failed" }}</p>
+    </div>
+    <span class="ntp-pill {{ check.state }}">{{ check.status }}</span>
+  </div>
+
+  <div class="ntp-metrics">
+    <div>
+      <span>Offset</span>
+      <strong>{{ fmt_ms(check.offset_ms) }}</strong>
+    </div>
+    <div>
+      <span>Delay</span>
+      <strong>{{ fmt_ms(check.delay_ms) }}</strong>
+    </div>
+    <div>
+      <span>Stratum</span>
+      <strong>{{ check.stratum if check.stratum is not none else "—" }}</strong>
+    </div>
+    <div>
+      <span>Mode</span>
+      <strong>{{ check.mode if check.mode is not none else "—" }}</strong>
+    </div>
+  </div>
+
+  <div class="ntp-details">
+    <div><span>Server time</span><strong>{{ check.server_time_text }}</strong></div>
+    <div><span>Checked</span><strong>{{ check.checked_at }}</strong></div>
+    {% if check.error %}
+    <div class="ntp-error"><span>Error</span><strong>{{ check.error }}</strong></div>
+    {% endif %}
+  </div>
+</article>

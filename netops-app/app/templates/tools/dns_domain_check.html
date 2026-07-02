@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="lookup-page dns-domain-check-page">
+  <header class="lookup-head dashboard-head">
+    <div>
+      <h1>DNS Domain Check</h1>
+      <div class="meta">Record lookup and cutover checks: Cloudflare authoritative, parent delegation, public propagation, host resolution, and campus resolver comparison.</div>
+    </div>
+  </header>
+
+  <form method="get" class="dns-domain-form">
+    <label>
+      Zone
+      <input name="zone" value="{{ zone }}">
+    </label>
+
+    <label>
+      Host / Record
+      <input name="host" value="{{ host }}">
+    </label>
+
+    <label>
+      Record Type
+      <select name="qtype">
+        {% for qt in qtypes %}
+          <option value="{{ qt }}" {% if qt == qtype %}selected{% endif %}>{{ qt }}</option>
+        {% endfor %}
+      </select>
+    </label>
+
+    <label>
+      Cloudflare NS
+      <input name="cf_ns" value="{{ cf_ns }}">
+    </label>
+
+    <label>
+      Parent servers
+      <input name="parent_servers" value="{{ parent_servers }}">
+    </label>
+
+    <label>
+      Public resolvers
+      <input name="public_resolvers" value="{{ public_resolvers }}">
+    </label>
+
+    <label>
+      Campus resolvers
+      <input name="campus_resolvers" value="{{ campus_resolvers }}">
+    </label>
+
+    <button type="submit">Run Domain Check</button>
+  </form>
+
+  <section class="dns-domain-summary">
+    <div class="dns-kpi {% if total_issues == 0 %}good{% else %}bad{% endif %}">
+      <strong>{{ total_ok }}/{{ total_rows }}</strong>
+      <span>Total OK</span>
+    </div>
+    <div class="dns-kpi {% if total_issues == 0 %}good{% else %}bad{% endif %}">
+      <strong>{{ total_issues }}</strong>
+      <span>Total Issues</span>
+    </div>
+    <div class="dns-kpi neutral">
+      <strong>{{ qtype }}</strong>
+      <span>Record Type</span>
+    </div>
+  </section>
+
+  {% for sec in sections %}
+    <section class="lookup-section dns-check-section">
+      <h2>{{ sec.title }}</h2>
+      <div class="meta dns-section-note">{{ sec.subtitle }}</div>
+
+      <div class="dns-mini-metrics">
+        <span>Rows {{ sec.row_count }}</span>
+        <span>OK {{ sec.ok_count }}</span>
+        <span>Issues {{ sec.issue_count }}</span>
+      </div>
+
+      <div class="dns-domain-table-wrap">
+        <table class="dns-domain-table">
+          <thead>
+            <tr>
+              <th>Server</th>
+              <th>Check</th>
+              <th>Name</th>
+              <th>Type</th>
+              <th>TTL</th>
+              <th>Status</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in sec.rows %}
+              <tr class="row-{{ row.status_class }}">
+                <td>{{ row.server }}</td>
+                <td>{{ row.check }}</td>
+                <td>{{ row.name }}</td>
+                <td>{{ row.type }}</td>
+                <td>{{ row.ttl }}</td>
+                <td><span class="status-pill {{ row.status_class }}">{{ row.status }}</span></td>
+                <td>{{ row.value }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  {% endfor %}
+</section>
+{% endblock %}

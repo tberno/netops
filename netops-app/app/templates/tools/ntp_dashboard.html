@@ -6,14 +6,14 @@
     <div>
       <div class="tv-eyebrow">Middlebury Network Time</div>
       <h1>NTP Status</h1>
-      <p>Live checks for Middlebury NTP with third-party reference servers for comparison.</p>
+      <p>Primary time service, backup appliances, and external reference servers.</p>
     </div>
     <div class="tv-status-badge {{ summary.overall_state }}">
       {{ summary.overall_status }}
     </div>
   </div>
 
-  <div class="tv-kpi-grid">
+  <div class="tv-kpi-grid ntp-kpi-grid">
     <div class="tv-kpi {{ summary.overall_state }}">
       <span>Overall</span>
       <strong>{{ summary.overall_status }}</strong>
@@ -43,7 +43,7 @@
   {% if primary %}
   <div class="ntp-primary-card {{ primary.state }}">
     <div>
-      <span class="ntp-label">Primary service name</span>
+      <span class="ntp-label">Primary Service</span>
       <strong>{{ primary.host }}</strong>
       <small>Resolves to {{ primary.resolved_ip or "unresolved" }}</small>
     </div>
@@ -58,51 +58,32 @@
       <small>NTP version {{ primary.version if primary.version is not none else "—" }}</small>
     </div>
     <div>
-      <span class="ntp-label">Server time</span>
+      <span class="ntp-label">Server Time</span>
       <strong>{{ primary.server_time_text }}</strong>
       <small>Checked {{ primary.checked_at }}</small>
     </div>
   </div>
   {% endif %}
 
-  <div class="ntp-card-grid">
-    {% for check in checks %}
-    <article class="ntp-check-card {{ check.state }}">
-      <div class="ntp-card-head">
-        <div>
-          <h2>{{ check.host }}</h2>
-          <p>{{ check.role_label }} · {{ check.resolved_ip or "DNS failed" }}</p>
-        </div>
-        <span class="ntp-pill {{ check.state }}">{{ check.status }}</span>
-      </div>
+  <div class="dashboard-section-title ntp-row-title">
+    <h2>Middlebury NTP Appliances</h2>
+    <p>Zeus primary, Hera backup, and MIIS appliances.</p>
+  </div>
 
-      <div class="ntp-metrics">
-        <div>
-          <span>Offset</span>
-          <strong>{{ fmt_ms(check.offset_ms) }}</strong>
-        </div>
-        <div>
-          <span>Delay</span>
-          <strong>{{ fmt_ms(check.delay_ms) }}</strong>
-        </div>
-        <div>
-          <span>Stratum</span>
-          <strong>{{ check.stratum if check.stratum is not none else "—" }}</strong>
-        </div>
-        <div>
-          <span>Mode</span>
-          <strong>{{ check.mode if check.mode is not none else "—" }}</strong>
-        </div>
-      </div>
+  <div class="ntp-row-grid ntp-middlebury-row">
+    {% for check in appliance_checks %}
+      {% include "tools/partials/ntp_card.html" %}
+    {% endfor %}
+  </div>
 
-      <div class="ntp-details">
-        <div><span>Server time</span><strong>{{ check.server_time_text }}</strong></div>
-        <div><span>Checked</span><strong>{{ check.checked_at }}</strong></div>
-        {% if check.error %}
-        <div class="ntp-error"><span>Error</span><strong>{{ check.error }}</strong></div>
-        {% endif %}
-      </div>
-    </article>
+  <div class="dashboard-section-title ntp-row-title">
+    <h2>External References</h2>
+    <p>Comparison only. These do not drive Middlebury service status.</p>
+  </div>
+
+  <div class="ntp-row-grid ntp-reference-row">
+    {% for check in reference_checks %}
+      {% include "tools/partials/ntp_card.html" %}
     {% endfor %}
   </div>
 </section>

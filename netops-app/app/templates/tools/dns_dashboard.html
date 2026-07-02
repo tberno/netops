@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% from "components/table.html" import table %}
+
+{% block content %}
+<section class="lookup-page dns-dashboard-page smart-dashboard">
+  <header class="lookup-head dashboard-head">
+    <div>
+      <h1>DNS Status Dashboard</h1>
+      <div class="meta">External DNS health, internal DNS reachability, and public resolver visibility.</div>
+    </div>
+    <form method="get" class="dashboard-zone-form">
+      <label>
+        Zone
+        <select name="zone" onchange="this.form.submit()">
+          {% for z in zones %}
+            <option value="{{ z }}" {% if z == zone %}selected{% endif %}>{{ z }}</option>
+          {% endfor %}
+        </select>
+      </label>
+    </form>
+  </header>
+
+  <section class="dns-kpi-grid dns-tv-kpis">
+    <div class="dns-kpi {% if overall_ok %}good{% else %}bad{% endif %}">
+      <strong>{% if overall_ok %}OK{% else %}CHECK{% endif %}</strong>
+      <span>External DNS Status</span>
+    </div>
+
+    <div class="dns-kpi {% if cf_bad == 0 %}good{% else %}bad{% endif %}">
+      <strong>{{ cf_ok }}/{{ cf_total }}</strong>
+      <span>Cloudflare Secondaries</span>
+    </div>
+
+    <div class="dns-kpi {% if internal_latency_bad == 0 %}good{% else %}bad{% endif %}">
+      <strong>{{ internal_latency_ok }}/{{ internal_latency_total }}</strong>
+      <span>Internal DNS Reachable</span>
+    </div>
+
+    <div class="dns-kpi {% if public_soa_reachable == public_soa_total %}good{% else %}bad{% endif %}">
+      <strong>{{ public_soa_reachable }}/{{ public_soa_total }}</strong>
+      <span>Public SOA Reachable</span>
+    </div>
+
+    <div class="dns-kpi {% if ns_bad == 0 %}good{% else %}bad{% endif %}">
+      <strong>{{ ns_ok }}/{{ ns_total }}</strong>
+      <span>Public NS Match</span>
+    </div>
+
+    <div class="dns-kpi neutral">
+      <strong>{{ external_serial }}</strong>
+      <span>External SOA Serial</span>
+    </div>
+  </section>
+
+  <section class="lookup-section dns-live-checks">
+    <h2>DNS Live Checks <span>{{ dashboard_check_ok }} OK / {{ dashboard_check_warn }} WARN / {{ dashboard_check_bad }} BAD</span></h2>
+    <div class="meta dns-section-note">
+      One row per check. MIIS response time is measured from raccoon, so it includes WAN latency.
+    </div>
+
+    {{ table([
+      {"key": "area", "label": "Area"},
+      {"key": "check", "label": "Check"},
+      {"key": "server", "label": "Server"},
+      {"key": "query", "label": "Query"},
+      {"key": "status", "label": "Status"},
+      {"key": "response_ms", "label": "ms"},
+      {"key": "serial_or_result", "label": "Serial / Result"},
+      {"key": "state", "label": "State"},
+      {"key": "note", "label": "Note"}
+    ], dashboard_check_rows) }}
+  </section>
+</section>
+{% endblock %}

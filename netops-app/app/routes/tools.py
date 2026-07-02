@@ -1,3 +1,4 @@
+from fastapi.responses import RedirectResponse
 import os
 
 from app.services.dns_dashboard import dns_dashboard_context
@@ -230,6 +231,12 @@ async def time_dns_dashboard(request: Request):
     context = time_dns_dashboard_context()
     context["request"] = request
     return templates.TemplateResponse(request, "tools/time_dns_dashboard.html", context)
+
+
+@router.get("/dashboards/status")
+async def dashboard_status_redirect(request: Request):
+    prefix = request.scope.get("root_path") or ""
+    return RedirectResponse(url=f"{prefix}/dashboards/time-dns", status_code=302)
 
 @router.get("/dashboards/{page}")
 async def dashboards_placeholder(request: Request, page: str):
