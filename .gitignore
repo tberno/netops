@@ -29,3 +29,4 @@ temp/
 # one-off migration/patch scripts from terminal build
 /*.sh
 !/scripts/*.sh
+data/
